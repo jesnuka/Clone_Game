@@ -10,8 +10,18 @@ public class PlayerController2D : MonoBehaviour
     BoxCollider2D boxCollider2d;
     SpriteRenderer spriteRenderer;
     SoundManager soundManager;
-    public ParticleSystem playerParticles;
-    public GameObject playerParticleObject;
+
+    public Sprite healthBarBlock;
+    public Sprite healthBarEmpty;
+
+    public GameObject gameOverUI;
+
+    public ParticleSystem runningParticles;
+    public ParticleSystem hurtParticles;
+    public ParticleSystem shootingParticlesRight;
+    public ParticleSystem shootingParticlesLeft;
+
+    public GameObject playerParticlesObject;
     [SerializeField]
     PhysicsMaterial2D fullFriction;
     [SerializeField]
@@ -20,6 +30,11 @@ public class PlayerController2D : MonoBehaviour
     //--Weapon Related
     public GameObject[] bulletList;
     public int weaponMode;
+    public int weaponAmmo;
+
+    //--Player Stats Related
+    public int playerHealthMax;
+    public int playerHealthCurrent;
 
 
     //--Variables
@@ -54,6 +69,7 @@ public class PlayerController2D : MonoBehaviour
     public bool isGrounded;
     public bool isOnSlope;
     public bool isClimbing;
+    bool gameIsOver;
     public LayerMask groundLayers;
     
 
@@ -64,29 +80,61 @@ public class PlayerController2D : MonoBehaviour
         playerAnimator = this.GetComponent<Animator>();
         spriteRenderer = this.GetComponent<SpriteRenderer>();
         boxCollider2d = this.GetComponent<BoxCollider2D>();
-        if (playerParticles == null)
-        {
-            playerParticles = this.transform.GetChild(1).GetComponent<ParticleSystem>();
-        }
-        if (playerParticleObject == null)
-        {
-            playerParticleObject = this.transform.GetChild(1).gameObject;
-        }
+        boxCollider2d = this.GetComponent<BoxCollider2D>();
        /* if (soundManager == null)
         {
             soundManager = GameObject.FindWithTag("SoundManager").GetComponent<SoundManager>();
         }*/
 
     }
+    private void OnGUI()
+    {
+        //Size of the GUI items
+        float x = Camera.main.pixelWidth / 256.0f;
+        float y = Camera.main.pixelHeight / 218.0f;
+        Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width, Camera.main.rect.y * Screen.height);
+
+
+        Sprite healthBar = healthBarBlock;
+
+        Rect healthBarRect = new Rect(healthBar.rect.x / healthBar.texture.width, healthBar.rect.y / healthBar.texture.height,
+                                healthBar.rect.width / healthBar.texture.width, healthBar.rect.height / healthBar.texture.height);
+
+        Sprite emptyBar = healthBarEmpty;
+        Rect emptyBarRect = new Rect(emptyBar.rect.x / emptyBar.texture.width, emptyBar.rect.y / emptyBar.texture.height,
+                                emptyBar.rect.width / emptyBar.texture.width, emptyBar.rect.height / emptyBar.texture.height);
+
+        for (int i = 0; i < playerHealthMax; i++)
+        {
+            if (playerHealthCurrent > i)
+                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), healthBar.texture, healthBarRect);
+            else
+                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
+        }
+    }
     void Update()
     {
-        CheckInput();
+        if(!gameIsOver)
+        {
+            CheckInput();
+        }
+       
     }
     void FixedUpdate()
     {
-        isGrounded = IsGrounded();
-        SlopeCheck();
-        MovePlayer();
+        if(!gameIsOver)
+        {
+            isGrounded = IsGrounded();
+            SlopeCheck();
+            MovePlayer();
+        }
+        
+    }
+
+    void GameOver()
+    { 
+        gameOverUI.SetActive(true);
+        gameIsOver = true;
     }
 
     void CheckInput()
@@ -120,6 +168,52 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    public void RemoveHealth(int damage)
+    {
+        if (playerHealthCurrent > 0)
+        {
+            int tempValue = playerHealthCurrent;
+            tempValue -= damage;
+            if (tempValue <= 0)
+            {
+                //Game over!
+                playerHealthCurrent = 0;
+                GameOver();
+            }
+            else
+            {
+                playerHealthCurrent = tempValue;
+                CreateParticles(0);
+            }
+        }
+        else
+        {
+            //Game over!
+            GameOver();
+        }
+    }
+
+    public void IncreaseHealth(int healthUp)
+    {
+        if(playerHealthCurrent < playerHealthMax)
+        {
+            int tempValue = playerHealthCurrent;
+            tempValue += healthUp;
+            if(tempValue > playerHealthMax)
+            {
+                playerHealthCurrent = playerHealthMax;
+            }
+            else
+            {
+                playerHealthCurrent = tempValue;
+            }
+        }
+        else
+        {
+            //Already have max health
+        }
+    }
+
     void WeaponFire()
     {
         //Check weaponMode to see what to shoot
@@ -136,6 +230,10 @@ public class PlayerController2D : MonoBehaviour
                     bullet.transform.parent = this.transform;
                     bullet.GetComponent<BulletScript>().Shoot(shootDir);
                     bullet.transform.position = new Vector3(transform.position.x + 0.8f * shootDir, transform.position.y, 0f);
+                    if (shootDir == 1)
+                        CreateParticles(2);
+                    else
+                        CreateParticles(3);
                     break;
                 }
             default:
@@ -144,13 +242,21 @@ public class PlayerController2D : MonoBehaviour
                 }
         }
     }
-
     void CreateParticles(int i)
     {
         switch (i)
         {
+            case 0:
+                hurtParticles.Play();
+                break;
             case 1:
-                playerParticles.Play();
+                runningParticles.Play();
+                break;
+            case 2:
+                shootingParticlesRight.Play();
+                break;
+            case 3:
+                shootingParticlesLeft.Play();
                 break;
             default:
                 break;
@@ -172,7 +278,13 @@ public class PlayerController2D : MonoBehaviour
         Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(0, boxCollider2d.bounds.extents.y), Vector2.right * (boxCollider2d.bounds.extents.x), rayColor);
         return raycastHit.collider != null;
     }
-
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 8)
+        {
+          //  CreateParticles(1);
+        }
+    }
     void SlopeCheck()
     {
         Vector2 checkPosition = transform.position - new Vector3(0.0f, boxCollider2d.bounds.extents.y);
@@ -255,6 +367,7 @@ public class PlayerController2D : MonoBehaviour
             rememberJumpPress = 0;
             rememberGrounded = 0;
             rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower);
+            
         }
 
         if (isGrounded && !isOnSlope)
