@@ -39,10 +39,14 @@ public class PlayerController2D : MonoBehaviour
 
     //--Variables
     float horizontalInput;
+    float verticalInput;
 
+
+    public float defaultGravity;
     public float runSpeed;
     public float airControl;
     public float jumpPower;
+    public float climbSpeed;
 
     [Range(0.0f, 1.0f)]
     public float cutJumpHeight;
@@ -53,6 +57,7 @@ public class PlayerController2D : MonoBehaviour
     float rememberGrounded;
 
 
+    public float ladderCheckDistance;
     public float groundCheckDistance;
     public float groundCheckWidthDifference;
     public float slopeCheckDistance;
@@ -69,12 +74,27 @@ public class PlayerController2D : MonoBehaviour
     public bool isGrounded;
     public bool isOnSlope;
     public bool isClimbing;
+
+    public bool touchingLadder;
+
     bool gameIsOver;
     public LayerMask groundLayers;
-    
+    public LayerMask groundLayersWithLadder;
+    public LayerMask ladderLayer;
+    public LayerMask ladderBlockLayer;
 
+    public State currentState;
+
+    public enum State
+    {
+        Dead,
+        Climbing,
+        Normal,
+        Falling
+    }
     private void Awake()
     {
+        currentState = State.Normal;
         isFacingRight = true;
         rb2d = this.GetComponent<Rigidbody2D>();
         playerAnimator = this.GetComponent<Animator>();
@@ -87,6 +107,9 @@ public class PlayerController2D : MonoBehaviour
         }*/
 
     }
+
+
+
     private void OnGUI()
     {
         //Size of the GUI items
@@ -126,7 +149,27 @@ public class PlayerController2D : MonoBehaviour
         {
             isGrounded = IsGrounded();
             SlopeCheck();
-            MovePlayer();
+            if (currentState == State.Dead)
+            {
+                //  Debug.Log("GG");
+                GameOver();
+            }
+            else if (currentState == State.Normal)
+            {
+               // Debug.Log("Moving");
+                MovePlayer();
+            }
+            else if(currentState == State.Climbing)
+            {
+               // Debug.Log("Climbing");
+                ClimbPlayer();
+            }
+            
+            else if(currentState == State.Falling)
+            {
+                FallPlayer();
+            }
+            
         }
         
     }
@@ -140,7 +183,9 @@ public class PlayerController2D : MonoBehaviour
     void CheckInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        if(horizontalInput > 0)
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+        if (horizontalInput > 0)
         {
             isFacingRight = true;
             isFacingLeft = false;
@@ -166,6 +211,7 @@ public class PlayerController2D : MonoBehaviour
         {
             WeaponFire();
         }
+
     }
 
     public void RemoveHealth(int damage)
@@ -178,7 +224,7 @@ public class PlayerController2D : MonoBehaviour
             {
                 //Game over!
                 playerHealthCurrent = 0;
-                GameOver();
+                currentState = State.Dead;
             }
             else
             {
@@ -267,7 +313,16 @@ public class PlayerController2D : MonoBehaviour
     {
         //Check if the player is grounded
         Vector3 boxSize = new Vector3(boxCollider2d.bounds.size.x - groundCheckWidthDifference, boxCollider2d.bounds.size.y, boxCollider2d.bounds.size.z);
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2d.bounds.center, boxSize, 0f, Vector2.down, groundCheckDistance, groundLayers);
+        RaycastHit2D raycastHit;
+        if(currentState != State.Climbing)
+        {
+            raycastHit = Physics2D.BoxCast(boxCollider2d.bounds.center, boxSize, 0f, Vector2.down, groundCheckDistance, groundLayersWithLadder);
+        }
+        else
+        {
+            raycastHit = Physics2D.BoxCast(boxCollider2d.bounds.center, boxSize, 0f, Vector2.down, groundCheckDistance, groundLayers);
+        }
+        
         Color rayColor;
         if(raycastHit.collider != null) rayColor = Color.green;
         else rayColor = Color.red;
@@ -284,7 +339,10 @@ public class PlayerController2D : MonoBehaviour
         {
           //  CreateParticles(1);
         }
+
+        
     }
+
     void SlopeCheck()
     {
         Vector2 checkPosition = transform.position - new Vector3(0.0f, boxCollider2d.bounds.extents.y);
@@ -347,13 +405,131 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    void ClimbPlayer()
+    {
+       
+        rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        CheckLadders();
+
+        //TODO: Snap player to the middle of ladder
+
+        rb2d.gravityScale = 0;
+        rb2d.velocity = new Vector2(0, climbSpeed * verticalInput);
+
+        if ((Input.GetKey("space")) || (Input.GetKey(KeyCode.X)) || (Input.GetButton("Jump")))
+        {
+            currentState = State.Falling;
+            rememberJumpPress = 0;
+        }
+        if(isGrounded)
+        {
+            currentState = State.Normal;
+        }
+    }
+
+
+    void CheckLadders()
+    {
+        Vector3 boxSize = new Vector3(boxCollider2d.bounds.size.x - 0.01f, boxCollider2d.bounds.size.y, boxCollider2d.bounds.size.z);
+
+        RaycastHit2D hitInfoUp = Physics2D.BoxCast(boxCollider2d.bounds.center, boxSize, 0f, Vector2.up, ladderCheckDistance, ladderLayer);
+        RaycastHit2D hitInfoDown = Physics2D.BoxCast(boxCollider2d.bounds.center, boxSize, 0f,  Vector2.down, ladderCheckDistance, ladderLayer);
+
+        //RaycastHit2D hitInfoUp = Physics2D.Raycast(boxCollider2d.bounds.center, Vector2.up, ladderCheckDistance, ladderLayer);
+        //RaycastHit2D hitInfoDown = Physics2D.Raycast(boxCollider2d.bounds.center, Vector2.down, ladderCheckDistance, ladderLayer);
+
+        Color rayColorUp;
+        Color rayColorDown;
+
+        if (hitInfoUp.collider != null) rayColorUp = Color.green;
+        else rayColorUp = Color.red;
+
+        if (hitInfoDown.collider != null) rayColorDown = Color.green;
+        else rayColorDown = Color.red;
+
+        //Debug.DrawRay(boxCollider2d.bounds.center, Vector2.down, rayColorDown);
+       // Debug.DrawRay(boxCollider2d.bounds.center, Vector2.up, rayColorUp);
+
+        Debug.DrawRay(boxCollider2d.bounds.center + new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + ladderCheckDistance), rayColorDown);
+        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + ladderCheckDistance), rayColorDown);
+        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(0, boxCollider2d.bounds.extents.y), Vector2.right * (boxCollider2d.bounds.extents.x), rayColorDown);
+
+        Debug.DrawRay(boxCollider2d.bounds.center + new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + ladderCheckDistance), rayColorUp);
+        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + ladderCheckDistance), rayColorUp);
+        Debug.DrawRay(boxCollider2d.bounds.center + new Vector3(0, boxCollider2d.bounds.extents.y), Vector2.right * (boxCollider2d.bounds.extents.x), rayColorUp);
+
+        if (hitInfoUp.collider != null)
+        {
+            if(currentState != State.Climbing)
+            {
+                //Debug.Log("See ladder up!");
+                if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+                {
+                   // Debug.Log("UP CLIMB");
+                    currentState = State.Climbing;
+                    isGrounded = false;
+                    /*transform.position = new Vector3(Mathf.Round(transform.position.x),
+                                 Mathf.Round(transform.position.y),
+                                 Mathf.Round(transform.position.z));*/
+                    //rb2d.position += new Vector2(0, 1);
+                }
+            }
+           
+        }
+
+        else if(hitInfoDown.collider != null)
+        {
+            if (currentState != State.Climbing)
+            {
+                //Debug.Log("See ladder down!");
+                if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+                {
+                    //Debug.Log("DOWN CLIMB");
+                    currentState = State.Climbing;
+                    isGrounded = false;
+                   /*transform.position = new Vector3(Mathf.Round(transform.position.x),
+                                 Mathf.Round(transform.position.y),
+                                 Mathf.Round(transform.position.z));*/
+                    //rb2d.position = new Vector2(0, -1);
+                }
+            }
+           
+        }
+
+        else
+        {
+            currentState = State.Normal;
+        }
+        
+    }
+    void FallPlayer()
+    {
+        if(isGrounded)
+        {
+            currentState = State.Normal;
+        }
+        else
+        {
+            rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rb2d.gravityScale = defaultGravity;
+
+            rb2d.velocity += new Vector2(horizontalInput * runSpeed * airControl * Time.deltaTime, 0);
+            rb2d.velocity = new Vector2(Mathf.Clamp(rb2d.velocity.x, -runSpeed, runSpeed), rb2d.velocity.y);
+        }
+    }
+
     void MovePlayer()
     {
-
+        
         rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb2d.gravityScale = defaultGravity;
 
         rememberJumpPress -= Time.deltaTime;
         rememberGrounded -= Time.deltaTime;
+
+        CheckLadders();
+
         if(isGrounded)
         {
             rememberGrounded = groundedRememberTime;
@@ -367,7 +543,6 @@ public class PlayerController2D : MonoBehaviour
             rememberJumpPress = 0;
             rememberGrounded = 0;
             rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower);
-            
         }
 
         if (isGrounded && !isOnSlope)
