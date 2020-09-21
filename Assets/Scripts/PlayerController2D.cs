@@ -469,9 +469,7 @@ public class PlayerController2D : MonoBehaviour
                    // Debug.Log("UP CLIMB");
                     currentState = State.Climbing;
                     isGrounded = false;
-                    /*transform.position = new Vector3(Mathf.Round(transform.position.x),
-                                 Mathf.Round(transform.position.y),
-                                 Mathf.Round(transform.position.z));*/
+                    this.transform.position = new Vector3(hitInfoUp.collider.transform.position.x, transform.position.y);
                     //rb2d.position += new Vector2(0, 1);
                 }
             }
@@ -488,9 +486,10 @@ public class PlayerController2D : MonoBehaviour
                     //Debug.Log("DOWN CLIMB");
                     currentState = State.Climbing;
                     isGrounded = false;
-                   /*transform.position = new Vector3(Mathf.Round(transform.position.x),
-                                 Mathf.Round(transform.position.y),
-                                 Mathf.Round(transform.position.z));*/
+                    this.transform.position = new Vector3(hitInfoDown.collider.transform.position.x, transform.position.y);
+                    /*transform.position = new Vector3(Mathf.Round(transform.position.x),
+                                  Mathf.Round(transform.position.y),
+                                  Mathf.Round(transform.position.z));*/
                     //rb2d.position = new Vector2(0, -1);
                 }
             }
