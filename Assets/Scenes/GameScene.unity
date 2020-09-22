@@ -413,7 +413,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &168974713
 GameObject:
@@ -1295,6 +1295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 302460663}
   - component: {fileID: 302460664}
+  - component: {fileID: 302460665}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1330,6 +1331,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0676ac3e8c6ef3b48912afba5558611b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &302460665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302460662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da1478632c735d94b8d925455027cfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &325340313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,7 +1355,7 @@ GameObject:
   - component: {fileID: 325340315}
   m_Layer: 0
   m_Name: SoundManager
-  m_TagString: Untagged
+  m_TagString: SoundManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23521,6 +23534,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 507168413, guid: 670479e62b5459c4daaeade15ab6d0a9, type: 3}
+      propertyPath: maxHealth
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1260472870940051884, guid: 670479e62b5459c4daaeade15ab6d0a9, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -23531,7 +23548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1260472870940051885, guid: 670479e62b5459c4daaeade15ab6d0a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.48
+      value: 3.12
       objectReference: {fileID: 0}
     - target: {fileID: 1260472870940051885, guid: 670479e62b5459c4daaeade15ab6d0a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -23555,7 +23572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1260472870940051885, guid: 670479e62b5459c4daaeade15ab6d0a9, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1260472870940051885, guid: 670479e62b5459c4daaeade15ab6d0a9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

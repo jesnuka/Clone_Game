@@ -8,7 +8,7 @@ public class BulletScript : MonoBehaviour
 
     public float destroyTimer;
     public float speed;
-    public float damage;
+    public int damage;
 
     public bool destroyOnWalls = false;
     public bool destroyOnEnemy = false;
@@ -28,10 +28,12 @@ public class BulletScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //if the bullet hits an enemy
-        if (collision.otherRigidbody != null)// && collision.otherRigidbody.GetComponent<Enemy>())
-        {
-            //Enemy enemy = collision.otherRigidbody.GetComponent<Enemy>();
-        }
+        //if (collision.otherRigidbody != null && collision.otherRigidbody.GetComponent<EnemyController>())
+      //  {
+            /*EnemyController enemy = collision.otherRigidbody.GetComponent<EnemyController>();
+            enemy.RemoveHealth(damage);
+            Destroy(gameObject);*/
+     //   }
 
         //If the bullet hits a groundLayer layer
         if (collision.gameObject.layer == 8)
@@ -43,9 +45,11 @@ public class BulletScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         //if the bullet hits an enemy
-        if (other.attachedRigidbody != null)// && collision.attachedRigidbody.GetComponent<Enemy>())
+        if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<EnemyController>())
         {
-            //Enemy enemy = collision.otherRigidbody.GetComponent<Enemy>();
+            EnemyController enemy = other.attachedRigidbody.GetComponent<EnemyController>();
+            enemy.RemoveHealth(damage);
+            Destroy(gameObject);
         }
 
         //If the bullet hits a groundLayer layer
