@@ -3711,9 +3711,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 248fd6b29185cab4c8a7747de856fbd6, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3816,7 +3816,7 @@ MonoBehaviour:
   introText2: {fileID: 696178658}
   introText3: {fileID: 1661458261}
   introPlayerLight: {fileID: 177454397}
-  cameraMoveSpeed: 0.08
+  cameraMoveSpeed: 0.075
   cameraMoveTime: 0
   cameraPosIntro: {x: 0, y: -4.75, z: -10}
   cameraPosMenu: {x: 0, y: 52, z: -10}
