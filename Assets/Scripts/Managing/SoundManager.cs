@@ -7,6 +7,7 @@ public class SoundManager : MonoBehaviour
     public SoundAudioClip[] audioClipArray;
 
     private Dictionary<Sound, float> soundTimerDictionary;
+    SoundManager soundManager;
 
     public enum Sound
     {

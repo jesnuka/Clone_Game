@@ -45,7 +45,7 @@ public class BulletScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         //if the bullet hits an enemy
-        if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<EnemyController>())
+      /*  if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<EnemyController>())
         {
             EnemyController enemy = other.attachedRigidbody.GetComponent<EnemyController>();
             enemy.RemoveHealth(damage);
@@ -57,7 +57,7 @@ public class BulletScript : MonoBehaviour
         {
             if (destroyOnWalls)
                 Destroy(gameObject);
-        }
+        }*/
     }
     public void Shoot(int dir)
     {

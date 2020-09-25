@@ -5,12 +5,17 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     SpriteRenderer spriteRenderer;
-    Rigidbody2D rb2d;
-    Collider2D collider2d;
+    Rigidbody2D aliveRb2d;
+    Animator aliveAnimator;
+    Collider2D aliveCollider2d;
     SoundManager soundManager;
-    ParticleSystem hurtParticles;
-    //ParticleSystem attackParticles;
-    //ParticleSystem moveParticles;
+
+    public GameObject[] dropItemsList;
+
+    public GameObject particleParent;
+    public ParticleSystem hurtParticles;
+    public ParticleSystem attackParticles;
+    public ParticleSystem moveParticles;
 
     public int maxHealth;
     public int currentHealth;
@@ -18,10 +23,34 @@ public class EnemyController : MonoBehaviour
     public float maxSpeed;
     public float currentSpeed;
 
+    private Vector2 movement;
+
     public int damage;
 
     public State currentState;
     public EnemyType enemyType;
+
+    private int facingDirection;
+    public GameObject alive;
+
+    [SerializeField]
+    private bool inPlayerView;
+
+
+    [SerializeField]
+    private float
+        groundCheckDistance,
+        wallCheckDistance;
+
+    [SerializeField]
+    private Transform
+        groundCheck,
+        wallCheck;
+
+    [SerializeField]
+    private LayerMask groundLayer;
+    private bool groundDetected;
+    private bool wallDetected;
 
     public enum EnemyType
     {
@@ -39,6 +68,22 @@ public class EnemyController : MonoBehaviour
         Moving,
         Attacking
     }
+
+
+
+    private void LateUpdate()
+    {
+        //Move particleParent to the alive enemy
+        if(alive != null)
+        {
+            Debug.Log("Hi");
+            particleParent.transform.position = alive.transform.position;
+            particleParent.transform.rotation = alive.transform.rotation;
+        }
+        
+
+    }
+
     private void Awake()
     {
         currentState = State.Moving;
@@ -46,16 +91,16 @@ public class EnemyController : MonoBehaviour
 
         if(spriteRenderer == null)
         {
-            spriteRenderer = this.GetComponent<SpriteRenderer>();
+            spriteRenderer = alive.GetComponent<SpriteRenderer>();
         }
-        if(rb2d == null)
+        if(aliveRb2d == null)
         {
-            rb2d = this.GetComponent<Rigidbody2D>();
+            aliveRb2d = alive.GetComponent<Rigidbody2D>();
         }
 
-        if (collider2d == null)
+        if (aliveCollider2d == null)
         {
-            collider2d = this.GetComponent<Collider2D>();
+            aliveCollider2d = alive.GetComponent<Collider2D>();
         }
 
         if(soundManager == null)
@@ -63,9 +108,9 @@ public class EnemyController : MonoBehaviour
             soundManager = GameObject.FindWithTag("SoundManager").GetComponent<SoundManager>();
         }
 
-        if(hurtParticles == null)
+       if(aliveAnimator == null)
         {
-            hurtParticles = this.transform.GetChild(0).GetChild(0).GetComponent<ParticleSystem>();
+            aliveAnimator = alive.GetComponent<Animator>();
         }
 
        /* if (moveParticles == null)
@@ -77,6 +122,11 @@ public class EnemyController : MonoBehaviour
         {
             attackParticles = this.transform.GetChild(0).GetChild(2).GetComponent<ParticleSystem>();
         }*/
+    }
+    private void Start()
+    {
+        alive = transform.Find("Alive").gameObject;
+        facingDirection = 1;
     }
     private void Update()
     {
@@ -90,11 +140,24 @@ public class EnemyController : MonoBehaviour
                 break;
             case State.Dead:
                 //TODO: CHANGE THIS BACK
-                Destroy(this.gameObject);
+                DropItem();
+                // Destroy(alive.gameObject);
                 //UpdateDeadState();
                 break;
         }
     }
+
+    private void Flip()
+    {
+        facingDirection *= -1;
+        alive.transform.Rotate(0.0f, 180.0f, 0.0f);
+    }
+
+    private void CheckDetections()
+    {
+
+    }
+
 
     //Moving State
     void EnterMovingState()
@@ -118,11 +181,31 @@ public class EnemyController : MonoBehaviour
         }
 
     }
+
     void UpdateMovingState()
     {
         switch (enemyType)
         {
             case EnemyType.bunny:
+
+                groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+                wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, groundLayer);
+
+               // Debug.Log("Wall? " + wallDetected + " ground? " + groundDetected);
+                if (!groundDetected || wallDetected)
+                {
+                    //Flip enemy around
+                   // Debug.Log("IFWall? " + wallDetected + " ground? " + groundDetected);
+                    Flip();
+                }
+                else
+                {
+                  //  Debug.Log("ELSEWall? " + wallDetected + " ground? " + groundDetected);
+                    //Move the enemy
+                    movement.Set(currentSpeed * facingDirection, aliveRb2d.velocity.y);
+                    aliveRb2d.velocity = movement;
+                }
+
                 break;
             case EnemyType.bat:
                 break;
@@ -227,6 +310,8 @@ public class EnemyController : MonoBehaviour
     //Dead State
     void EnterDeadState()
     {
+        //Spawn particles etc, effects
+        
         switch (enemyType)
         {
             case EnemyType.bunny:
@@ -344,6 +429,39 @@ public class EnemyController : MonoBehaviour
             //Game over!
             currentState = State.Dead;
         }
+    }
+
+    void DestroyEnemy()
+    {
+        Destroy(alive.gameObject);
+    }
+
+    public void DropItem()
+    {
+        if(alive != null)
+        {
+            Debug.Log("Ded");
+            //RandomNum can be removed, if items are later chosen depending on dropChance
+            int randomNum = Random.Range(0, dropItemsList.Length);
+            float dropChance = Random.Range(75.0f, 100f);
+
+
+            //With more items, add more to list. If specific items should have different drop chance, add if- here, and choose from list [n]
+            if (dropChance > 75f)
+            {
+                GameObject itemDrop = dropItemsList[randomNum];
+                Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
+                Destroy(alive.gameObject);
+
+            }
+            else
+            {
+                Destroy(alive.gameObject);
+            }
+            //Kill enemy afterwards
+            //Invoke("DestroyEnemy", 1f);
+        }
+
     }
 
 }
