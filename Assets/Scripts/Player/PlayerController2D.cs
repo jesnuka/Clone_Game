@@ -18,6 +18,7 @@ public class PlayerController2D : MonoBehaviour
 
     public ParticleSystem runningParticles;
     public ParticleSystem hurtParticles;
+    public ParticleSystem healParticles;
     public ParticleSystem shootingParticlesRight;
     public ParticleSystem shootingParticlesLeft;
 
@@ -247,10 +248,13 @@ public class PlayerController2D : MonoBehaviour
             tempValue += healthUp;
             if(tempValue > playerHealthMax)
             {
+                Debug.Log("Already Full HP");
                 playerHealthCurrent = playerHealthMax;
             }
             else
             {
+                Debug.Log("Healed");
+                CreateParticles(4);
                 playerHealthCurrent = tempValue;
             }
         }
@@ -303,6 +307,9 @@ public class PlayerController2D : MonoBehaviour
                 break;
             case 3:
                 shootingParticlesLeft.Play();
+                break;
+            case 4:
+                healParticles.Play();
                 break;
             default:
                 break;

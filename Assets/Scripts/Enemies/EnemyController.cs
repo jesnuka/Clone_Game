@@ -76,7 +76,6 @@ public class EnemyController : MonoBehaviour
         //Move particleParent to the alive enemy
         if(alive != null)
         {
-            Debug.Log("Hi");
             particleParent.transform.position = alive.transform.position;
             particleParent.transform.rotation = alive.transform.rotation;
         }
@@ -440,16 +439,25 @@ public class EnemyController : MonoBehaviour
     {
         if(alive != null)
         {
-            Debug.Log("Ded");
             //RandomNum can be removed, if items are later chosen depending on dropChance
-            int randomNum = Random.Range(0, dropItemsList.Length);
-            float dropChance = Random.Range(75.0f, 100f);
+          //  int randomNum = Random.Range(0, dropItemsList.Length);
+            float dropChance = Random.Range(0.0f, 100f);
 
 
             //With more items, add more to list. If specific items should have different drop chance, add if- here, and choose from list [n]
-            if (dropChance > 75f)
+
+
+            
+            if ((dropChance > 50f) && (dropChance <= 75f)) //Large health pickup
             {
-                GameObject itemDrop = dropItemsList[randomNum];
+                GameObject itemDrop = dropItemsList[1];
+                Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
+                Destroy(alive.gameObject);
+
+            }
+            else if ((dropChance > 0f) && (dropChance <= 40f)) //Small health pickup
+            {
+                GameObject itemDrop = dropItemsList[0];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
                 Destroy(alive.gameObject);
 
