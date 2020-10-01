@@ -6,9 +6,10 @@ public class PlayerController2D : MonoBehaviour
 {
     //--Component References
     Rigidbody2D rb2d;
-    Animator playerAnimator;
+    public Animator playerAnimator;
     BoxCollider2D boxCollider2d;
-    SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
+    [SerializeField]
     SoundManager soundManager;
 
     public Sprite healthBarBlock;
@@ -34,6 +35,7 @@ public class PlayerController2D : MonoBehaviour
     public int weaponAmmo;
 
     //--Player Stats Related
+    public int playerLivesCurrent;
     public int playerHealthMax;
     public int playerHealthCurrent;
 
@@ -42,6 +44,9 @@ public class PlayerController2D : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
+    //-- Animation related
+    public float animationDelayTime;
+    public float animationDelayTimeMax;
 
     public float defaultGravity;
     public float runSpeed;
@@ -91,15 +96,14 @@ public class PlayerController2D : MonoBehaviour
         Dead,
         Climbing,
         Normal,
-        Falling
+        Falling,
+        Knockback
     }
     private void Awake()
     {
         currentState = State.Normal;
         isFacingRight = true;
         rb2d = this.GetComponent<Rigidbody2D>();
-        playerAnimator = this.GetComponent<Animator>();
-        spriteRenderer = this.GetComponent<SpriteRenderer>();
         boxCollider2d = this.GetComponent<BoxCollider2D>();
         boxCollider2d = this.GetComponent<BoxCollider2D>();
        /* if (soundManager == null)
@@ -148,6 +152,7 @@ public class PlayerController2D : MonoBehaviour
     {
         if(!gameIsOver)
         {
+            animationDelayTime -= Time.deltaTime;
             isGrounded = IsGrounded();
             SlopeCheck();
             if (currentState == State.Dead)
@@ -165,7 +170,13 @@ public class PlayerController2D : MonoBehaviour
                // Debug.Log("Climbing");
                 ClimbPlayer();
             }
-            
+
+            else if (currentState == State.Knockback)
+            {
+                // Debug.Log("Climbing");
+                ClimbPlayer();
+            }
+
             else if(currentState == State.Falling)
             {
                 FallPlayer();
@@ -231,6 +242,7 @@ public class PlayerController2D : MonoBehaviour
             {
                 playerHealthCurrent = tempValue;
                 CreateParticles(0);
+                soundManager.PlaySound(SoundManager.Sound.playerTakeDamage,1f);
             }
         }
         else
@@ -255,6 +267,7 @@ public class PlayerController2D : MonoBehaviour
             {
                 Debug.Log("Healed");
                 CreateParticles(4);
+                soundManager.PlaySound(SoundManager.Sound.playerPickup,1f);
                 playerHealthCurrent = tempValue;
             }
         }
@@ -279,7 +292,30 @@ public class PlayerController2D : MonoBehaviour
                     GameObject bullet = Instantiate(bulletList[weaponMode]);
                     bullet.transform.parent = this.transform;
                     bullet.GetComponent<BulletScript>().Shoot(shootDir);
-                    bullet.transform.position = new Vector3(transform.position.x + 0.8f * shootDir, transform.position.y, 0f);
+                    bullet.transform.position = new Vector3(transform.position.x + 2.25f * shootDir, transform.position.y + 0.25f, 0f);
+                    soundManager.PlaySound(SoundManager.Sound.playerShoot,0.3f);
+                    if(currentState == State.Climbing)
+                    {
+                        playerAnimator.Play("Player_ClimbShoot");
+                        animationDelayTime = animationDelayTimeMax;
+                    }
+                    else if(currentState == State.Normal && (horizontalInput != 0) && isGrounded)
+                    {
+                        playerAnimator.Play("Player_RunShoot");
+                        animationDelayTime = animationDelayTimeMax;
+                    }
+                    else if(currentState == State.Falling || (currentState == State.Normal && !isGrounded))
+                    {
+                        Debug.Log("Pew");
+                        playerAnimator.Play("Player_FallShoot");
+                        animationDelayTime = animationDelayTimeMax;
+                    }
+                    else
+                    {
+                        playerAnimator.Play("Player_Shoot");
+                        animationDelayTime = animationDelayTimeMax;
+                    }
+                    
                     if (shootDir == 1)
                         CreateParticles(2);
                     else
@@ -414,7 +450,7 @@ public class PlayerController2D : MonoBehaviour
 
     void ClimbPlayer()
     {
-       
+        
         rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         CheckLadders();
@@ -422,16 +458,35 @@ public class PlayerController2D : MonoBehaviour
         //TODO: Snap player to the middle of ladder
 
         rb2d.gravityScale = 0;
-        rb2d.velocity = new Vector2(0, climbSpeed * verticalInput);
+        if(animationDelayTime < 0)
+        {
+            rb2d.velocity = new Vector2(0, climbSpeed * verticalInput);
+        }
+        else
+        {
+            rb2d.velocity = new Vector2(0, 0);
+        }
+       
+
+        if(verticalInput != 0 && (animationDelayTime < 0))
+        {
+            playerAnimator.Play("Player_Climb");
+        }
+        else if(verticalInput == 0 && (animationDelayTime < 0))
+        {
+            playerAnimator.Play("Player_Climb_Idle");
+        }
 
         if ((Input.GetKey("space")) || (Input.GetKey(KeyCode.X)) || (Input.GetButton("Jump")))
         {
             currentState = State.Falling;
+            playerAnimator.Play("Player_Fall");
             rememberJumpPress = 0;
         }
         if(isGrounded)
         {
             currentState = State.Normal;
+            playerAnimator.Play("Player_Idle");
         }
     }
 
@@ -514,9 +569,11 @@ public class PlayerController2D : MonoBehaviour
         if(isGrounded)
         {
             currentState = State.Normal;
+            //playerAnimator.Play("Player_Idle");
         }
         else
         {
+            playerAnimator.Play("Player_Fall");
             rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
             rb2d.gravityScale = defaultGravity;
 
@@ -548,6 +605,9 @@ public class PlayerController2D : MonoBehaviour
             //Jump can also be pressed a bit before landing for easier timed jumps
             rememberJumpPress = 0;
             rememberGrounded = 0;
+            soundManager.PlaySound(SoundManager.Sound.playerJump,0.8f);
+            playerAnimator.Play("Player_Jump");
+            animationDelayTime = animationDelayTimeMax;
             rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower);
         }
 
@@ -555,7 +615,16 @@ public class PlayerController2D : MonoBehaviour
         {
             
             rb2d.velocity = new Vector2(runSpeed * horizontalInput, rb2d.velocity.y);
+            if(horizontalInput == 0 && (animationDelayTime < 0))
+            {
+                playerAnimator.Play("Player_Idle");
+            }
+            else if(horizontalInput != 0 && (animationDelayTime < 0))
+            {
+                playerAnimator.Play("Player_Run");
+            }
             
+
         }
         else if (isGrounded && isOnSlope)
         {
@@ -567,6 +636,10 @@ public class PlayerController2D : MonoBehaviour
             //Air control movement
             rb2d.velocity += new Vector2(horizontalInput * runSpeed * airControl * Time.deltaTime, 0);
             rb2d.velocity = new Vector2(Mathf.Clamp(rb2d.velocity.x, -runSpeed, runSpeed), rb2d.velocity.y);
+            if(animationDelayTime < 0)
+            {
+                playerAnimator.Play("Player_Fall");
+            }
         }
     }
 

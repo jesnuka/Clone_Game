@@ -420,6 +420,7 @@ public class EnemyController : MonoBehaviour
             {
                 //TODO: Add "flash" effect
                 hurtParticles.Play();
+                soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
                 currentHealth = tempValue;
             }
         }

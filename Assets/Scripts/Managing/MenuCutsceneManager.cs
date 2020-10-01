@@ -16,12 +16,19 @@ public class MenuCutsceneManager : MonoBehaviour
     public float cameraMoveSpeed;
     public float cameraMoveTime;
 
+    public AudioSource menuAudioSource;
+
+    public AudioClip menuSong;
+    public AudioClip introSong;
+
     Transform[] viewList;
     Transform currentView;
 
     public Vector3 cameraPosIntro;
     public Vector3 cameraPosMenu;
     public bool cameraCanMove;
+
+    bool menuSongPlaying;
 
     bool introSkipped;
 
@@ -41,12 +48,20 @@ public class MenuCutsceneManager : MonoBehaviour
 
         if(introSkipped)
         {
+            menuAudioSource.clip = menuSong;
             cameraCanMove = false;
             introPlayerLight.SetActive(true);
             menuUI.SetActive(true);
             introUI.SetActive(false);
             menuCamera.transform.position = cameraPosMenu;
+            if (!menuSongPlaying)
+            {
+                menuAudioSource.Play();
+                menuSongPlaying = true;
+                menuAudioSource.loop = true;
+            }
         }
+        
     }
     private void LateUpdate()
     {
@@ -59,9 +74,13 @@ public class MenuCutsceneManager : MonoBehaviour
 
         if(cameraMoveTime >= 1)
         {
+            //menuAudioSource.clip = menuSong;
+            //menuAudioSource.Play();
             cameraCanMove = false;
             menuCamera.transform.position = cameraPosMenu;
+            
         }
+       
     }
     private void Start()
     {
@@ -113,7 +132,7 @@ public class MenuCutsceneManager : MonoBehaviour
             introUI.SetActive(false);
             cameraCanMove = true;
             Debug.Log("4");
-            StartCoroutine(IntroCutscene5(14));
+            StartCoroutine(IntroCutscene5(15));
         }
        
     }
@@ -123,6 +142,7 @@ public class MenuCutsceneManager : MonoBehaviour
         if (!introSkipped)
         {
             menuUI.SetActive(true);
+            introSkipped = true;
             Debug.Log("5");
             introPlayerLight.SetActive(true);
         }

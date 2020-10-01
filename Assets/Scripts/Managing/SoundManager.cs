@@ -12,6 +12,11 @@ public class SoundManager : MonoBehaviour
     public enum Sound
     {
         test,
+        playerShoot,
+        playerPickup,
+        playerJump,
+        playerTakeDamage,
+        enemyTakeDamage,
        // delay,
     }
 
@@ -77,12 +82,13 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlaySound(Sound sound)
+    public void PlaySound(Sound sound, float volume)
     {
         if (CanPlaySound(sound))
         {
             GameObject soundGameObject = new GameObject("Sound");
             AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
+            audioSource.volume = volume;
             audioSource.PlayOneShot(GetAudioClip(sound));
 
             Object.Destroy(soundGameObject, GetAudioClip(sound).length);
