@@ -57,6 +57,16 @@ public class PlayerController2D : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float cutJumpHeight;
 
+    public GameObject currentCheckpoint;
+
+    public GameObject invincibilityLight;
+    public float invincibilityTime;
+    public float invincibilityTimeMax;
+    public float knockbackTime;
+    public float knockbackTimeMax;
+    public int knockbackDirection;
+
+
     public float jumpRememberTime;
     public float groundedRememberTime;
     float rememberJumpPress;
@@ -88,8 +98,10 @@ public class PlayerController2D : MonoBehaviour
     public LayerMask groundLayersWithLadder;
     public LayerMask ladderLayer;
     public LayerMask ladderBlockLayer;
+    public LayerMask enemyLayers;
 
     public State currentState;
+    public bool isInvincible;
 
     public enum State
     {
@@ -98,6 +110,7 @@ public class PlayerController2D : MonoBehaviour
         Normal,
         Falling,
         Knockback
+        //Invincible
     }
     private void Awake()
     {
@@ -173,8 +186,15 @@ public class PlayerController2D : MonoBehaviour
 
             else if (currentState == State.Knockback)
             {
-                // Debug.Log("Climbing");
-                ClimbPlayer();
+                // Debug.Log("Knockback");
+                knockbackTime -= Time.deltaTime;
+                KnockbackPlayer(knockbackDirection);
+            }
+            if (isInvincible)
+            {
+                // Debug.Log("Invincible");
+                invincibilityTime-= Time.deltaTime;
+                InvincibilityFrames();
             }
 
             else if(currentState == State.Falling)
@@ -209,47 +229,87 @@ public class PlayerController2D : MonoBehaviour
             isFacingLeft = true;
             spriteRenderer.flipX = true;
         }
+        if((currentState != State.Knockback) && (currentState !=  State.Dead))
+        {
+            if ((Input.GetKeyDown("space")) || (Input.GetKeyDown(KeyCode.X)) || (Input.GetButtonDown("Jump")))
+            {
+                rememberJumpPress = jumpRememberTime;
+            }
+            if ((Input.GetKeyUp("space")) || (Input.GetKeyUp(KeyCode.X)) || (Input.GetButtonUp("Jump")))
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * cutJumpHeight);
+            }
 
-        if ((Input.GetKeyDown("space")) || (Input.GetKeyDown(KeyCode.X)) || (Input.GetButtonDown("Jump")))
-        {
-            rememberJumpPress = jumpRememberTime;
+            if (Input.GetKeyDown(KeyCode.Z) || Input.GetButtonDown("Fire1"))
+            {
+                WeaponFire();
+            }
         }
-        if ((Input.GetKeyUp("space"))|| (Input.GetKeyUp(KeyCode.X)) || (Input.GetButtonUp("Jump")))
-        {
-            rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y * cutJumpHeight);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Z) || Input.GetButtonDown("Fire1"))
-        {
-            WeaponFire();
-        }
+        
 
     }
 
+    void RespawnPlayer()
+    {
+        playerHealthCurrent = playerHealthMax;
+        transform.position = currentCheckpoint.transform.position;
+
+        //Add some screen black fade etc. some delay
+
+        //Give ammo back here as well, if added
+
+    }
+
+
     public void RemoveHealth(int damage)
     {
-        if (playerHealthCurrent > 0)
+        if(!isInvincible)
         {
-            int tempValue = playerHealthCurrent;
-            tempValue -= damage;
-            if (tempValue <= 0)
+            if (playerHealthCurrent > 0)
             {
-                //Game over!
-                playerHealthCurrent = 0;
-                currentState = State.Dead;
+                int tempValue = playerHealthCurrent;
+                tempValue -= damage;
+                if (tempValue <= 0)
+                {
+                    //Dead, remove a life
+                    playerHealthCurrent = 0;
+                    if(playerLivesCurrent > 0)
+                    {
+                        playerLivesCurrent -= 1;
+                        RespawnPlayer();
+                    }
+                    else
+                    {
+                        currentState = State.Dead;
+                    }
+                   // 
+                }
+                else
+                {
+                    playerHealthCurrent = tempValue;
+                    CreateParticles(0);
+                    rb2d.velocity = Vector2.zero;
+                    currentState = State.Knockback;
+                    knockbackTime = knockbackTimeMax;
+                    Debug.Log("damaged!");
+                    soundManager.PlaySound(SoundManager.Sound.playerTakeDamage, 1f);
+                }
             }
             else
             {
-                playerHealthCurrent = tempValue;
-                CreateParticles(0);
-                soundManager.PlaySound(SoundManager.Sound.playerTakeDamage,1f);
+                //Should never be here, but incase, do same as when taking damage
+                if (playerLivesCurrent > 0)
+                {
+                    playerLivesCurrent -= 1;
+                    RespawnPlayer();
+                }
+                else
+                {
+                    currentState = State.Dead;
+                }
             }
         }
-        else
-        {
-            //Game over!
-            GameOver();
-        }
+        
     }
 
     public void IncreaseHealth(int healthUp)
@@ -292,7 +352,7 @@ public class PlayerController2D : MonoBehaviour
                     GameObject bullet = Instantiate(bulletList[weaponMode]);
                     bullet.transform.parent = this.transform;
                     bullet.GetComponent<BulletScript>().Shoot(shootDir);
-                    bullet.transform.position = new Vector3(transform.position.x + 2.25f * shootDir, transform.position.y + 0.25f, 0f);
+                    bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
                     soundManager.PlaySound(SoundManager.Sound.playerShoot,0.3f);
                     if(currentState == State.Climbing)
                     {
@@ -378,12 +438,28 @@ public class PlayerController2D : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.gameObject.layer == 8)
         {
           //  CreateParticles(1);
         }
 
-        
+        if (collision.otherRigidbody != null && collision.gameObject.GetComponent<EnemyCollisionChecker>()) //Enemy collision damage.
+        {
+            EnemyCollisionChecker enemy = collision.gameObject.GetComponent<EnemyCollisionChecker>();
+
+            if(enemy.transform.position.x > transform.position.x)//Enemy on the right side
+            {
+                knockbackDirection = -1;
+            }
+            else //enemy on the left side
+            {
+                knockbackDirection = 1;
+            }
+
+            RemoveHealth(enemy.GetDamage());
+        }
+
     }
 
     void SlopeCheck()
@@ -445,6 +521,44 @@ public class PlayerController2D : MonoBehaviour
         else
         {
             rb2d.sharedMaterial = noFriction;
+        }
+    }
+
+    void KnockbackPlayer(int direction)
+    {
+        playerAnimator.Play("Player_Hit");
+        isInvincible = true;
+        invincibilityTime = invincibilityTimeMax;
+        if (knockbackTime < 0)
+        {
+            Debug.Log("Knockback ended");
+            knockbackDirection = 0;
+            currentState = State.Normal;
+        }
+            //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
+            //velocity change for rest of knockback
+            //rb2d.AddForce(new Vector2(0, 345f));
+        rb2d.velocity = new Vector2(3f * direction, rb2d.velocity.y);
+            
+        
+            //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
+            //velocity change for rest of knockback
+            //rb2d.AddForce(new Vector2(0,45f));
+       // rb2d.velocity = new Vector2(3f, rb2d.velocity.y);
+    }
+
+    void InvincibilityFrames()
+    {
+        if(invincibilityTime > 0)
+        {
+            Physics2D.IgnoreLayerCollision(13, 12, true);
+            invincibilityLight.SetActive(true);
+        }
+        else
+        {
+            Physics2D.IgnoreLayerCollision(13, 12, false);
+            invincibilityLight.SetActive(false);
+            isInvincible = false;
         }
     }
 

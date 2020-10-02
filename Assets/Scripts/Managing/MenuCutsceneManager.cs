@@ -28,16 +28,22 @@ public class MenuCutsceneManager : MonoBehaviour
     public Vector3 cameraPosMenu;
     public bool cameraCanMove;
 
+    public Animator menuPlayerAnimator;
+    public ParticleSystem menuPlayerParticles;
+
     bool menuSongPlaying;
 
     bool introSkipped;
 
     private void Awake()
     {
-        if(menuCamera == null)
+        menuPlayerAnimator.Play("Player_Idle");
+        if (menuCamera == null)
         {
             menuCamera = Camera.main;
         }
+        menuPlayerParticles.Play();
+        menuPlayerParticles.gameObject.SetActive(false);
     }
     private void Update()
     {
@@ -48,6 +54,10 @@ public class MenuCutsceneManager : MonoBehaviour
 
         if(introSkipped)
         {
+            menuPlayerAnimator.Play("Player_ShootMenu");
+
+            //
+           
             menuAudioSource.clip = menuSong;
             cameraCanMove = false;
             introPlayerLight.SetActive(true);
@@ -56,6 +66,12 @@ public class MenuCutsceneManager : MonoBehaviour
             menuCamera.transform.position = cameraPosMenu;
             if (!menuSongPlaying)
             {
+                menuPlayerParticles.gameObject.SetActive(true);
+                menuPlayerParticles.Play();
+                float rand = Random.Range(0.6f, 1.0f);
+                menuPlayerParticles.Simulate(rand);
+                //menuPlayerParticles.loop = true;
+                 menuPlayerParticles.Pause();
                 menuAudioSource.Play();
                 menuSongPlaying = true;
                 menuAudioSource.loop = true;
