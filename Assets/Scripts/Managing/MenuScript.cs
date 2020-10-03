@@ -19,7 +19,7 @@ public class MenuScript : MonoBehaviour
     }
     public void StartGame()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("GameScene_Level1");
     }
 
     public void Credits()
