@@ -447,6 +447,7 @@ public class PlayerController2D : MonoBehaviour
         if (collision.otherRigidbody != null && collision.gameObject.GetComponent<EnemyCollisionChecker>()) //Enemy collision damage.
         {
             EnemyCollisionChecker enemy = collision.gameObject.GetComponent<EnemyCollisionChecker>();
+            enemy.enemyController.TouchedPlayer();
 
             if(enemy.transform.position.x > transform.position.x)//Enemy on the right side
             {

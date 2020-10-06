@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     Animator aliveAnimator;
     Collider2D aliveCollider2d;
     SoundManager soundManager;
+    public GameObject player;
 
     public GameObject[] dropItemsList;
 
@@ -35,6 +36,20 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField]
     private bool inPlayerView;
+
+    // -- Bat related starts
+
+    public float batSleepTimer;
+    public float batSleepTimerMax;
+
+    public bool batIsSleeping;
+    public bool batIsFleeing;
+    public Vector3 batFleePos;
+
+    // -- Bat related ends
+
+
+
 
 
     [SerializeField]
@@ -87,6 +102,7 @@ public class EnemyController : MonoBehaviour
     {
         currentState = State.Moving;
         currentHealth = maxHealth;
+        player = GameObject.Find("Player");
 
         if(spriteRenderer == null)
         {
@@ -207,6 +223,50 @@ public class EnemyController : MonoBehaviour
 
                 break;
             case EnemyType.bat:
+                // groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+                // wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, groundLayer);
+
+                float distanceToPlayer = Vector3.Distance(alive.transform.position, player.transform.position);
+                //Debug.Log("Bat distance to player is: " + distanceToPlayer);
+
+                if(batIsFleeing) //Hit player, flee,
+                {
+                    alive.transform.position = Vector3.MoveTowards(alive.transform.position, batFleePos, currentSpeed*4);
+                    if(alive.transform.position == batFleePos)
+                    {
+                        aliveRb2d.velocity = Vector3.zero;
+                        batIsFleeing = false;
+                        batIsSleeping = true;
+                        batSleepTimer = batSleepTimerMax;
+                        //Set sleep animation here
+                    }
+                }
+                else
+                {
+                    if (distanceToPlayer < 20) //Change distance to more accurate number
+                    {
+                        if (!batIsSleeping) //If awake, allow movement
+                        {
+                            alive.transform.position = Vector3.MoveTowards(alive.transform.position, player.transform.position, currentSpeed);
+                        }
+                        else //If the bat is sleeping, wake up once countdown reaches 0
+                        {
+                            batSleepTimer -= Time.deltaTime;
+                            if (batSleepTimer < 0)
+                            {
+                                batIsSleeping = false;
+                                //Wakeup here, change animation to moving
+                            }
+                        }
+                        //Sees player
+                    }
+
+                   /* if (distanceToPlayer < 1) // This was moved to TouchedPlayer() function, which is called from EnemyCollisionChecker
+                    {
+                       
+                    }*/
+                }
+
                 break;
             case EnemyType.gorilla:
                 break;
@@ -402,6 +462,62 @@ public class EnemyController : MonoBehaviour
         currentState = state;
     }
     
+    public void CeilingHit()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.bunny:
+                break;
+            case EnemyType.bat:
+
+                //TODO add sleep animation here!
+                aliveRb2d.velocity = Vector3.zero;
+                batIsFleeing = false;
+                batIsSleeping = true;
+                batSleepTimer = batSleepTimerMax;
+
+                break;
+
+            case EnemyType.gorilla:
+                break;
+            case EnemyType.bird:
+                break;
+            case EnemyType.hotdog:
+                break;
+            case EnemyType.rooster:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void TouchedPlayer()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.bunny:
+                break;
+            case EnemyType.bat:
+
+                    Debug.Log("Player hit!");
+                    batIsFleeing = true;
+                    float fleeDist = Random.Range(10f, 15f);
+                    batFleePos = new Vector3(alive.transform.position.x, alive.transform.position.y + fleeDist, alive.transform.position.z);
+
+                    break;
+
+            case EnemyType.gorilla:
+                break;
+            case EnemyType.bird:
+                break;
+            case EnemyType.hotdog:
+                break;
+            case EnemyType.rooster:
+                break;
+            default:
+                break;
+        }
+    }
 
 
     public void RemoveHealth(int damage)
