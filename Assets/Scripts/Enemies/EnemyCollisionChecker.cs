@@ -13,6 +13,16 @@ public class EnemyCollisionChecker : MonoBehaviour
 
     private void Awake()
     {
+        /*if(enemyController == null)
+        {
+            enemyController = this.transform.parent.gameObject.GetComponent<EnemyController>();
+        }*/
+        SetVariables();
+       // enemyType = enemyController.enemyType;
+    }
+
+    public void SetVariables()
+    {
         enemyController = this.transform.parent.gameObject.GetComponent<EnemyController>();
         enemyType = enemyController.enemyType;
     }

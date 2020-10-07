@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -32,21 +33,42 @@ public class EnemyController : MonoBehaviour
     public EnemyType enemyType;
 
     private int facingDirection;
+
+    //This is different for each type of enemy, it is set beforehand!
+    //it determines what type of an enemy this spawns
+    public GameObject enemyTypeGameObject;
     public GameObject alive;
 
     [SerializeField]
     private bool inPlayerView;
 
-    // -- Bat related starts
 
+    public GameObject[] bulletList;
+
+    // -- Bat related starts
     public float batSleepTimer;
     public float batSleepTimerMax;
-
-    public bool batIsSleeping;
-    public bool batIsFleeing;
-    public Vector3 batFleePos;
-
+    bool batIsSleeping;
+    bool batIsFleeing;
+    Vector3 batFleePos;
     // -- Bat related ends
+
+    // -- Bunny related starts
+    public float bunnyWalkTimer;
+    public float bunnyWalkTimerMax;
+
+    public float bunnyWaitTimer;
+    public float bunnyWaitTimerMax;
+
+    public float bunnyShootTimer;
+    public float bunnyShootTimerMax;
+
+    public int bunnyShootCounter;
+    public int bunnyShootCounterMax;
+
+    //Vector3 bunnyMovePos;
+    bool bunnyIsWaiting;
+    // -- Bunny related ends
 
 
 
@@ -81,7 +103,8 @@ public class EnemyController : MonoBehaviour
     {
         Dead,
         Moving,
-        Attacking
+        Attacking,
+        ReadyToSpawn
     }
 
 
@@ -104,40 +127,21 @@ public class EnemyController : MonoBehaviour
         currentHealth = maxHealth;
         player = GameObject.Find("Player");
 
-        if(spriteRenderer == null)
-        {
-            spriteRenderer = alive.GetComponent<SpriteRenderer>();
-        }
-        if(aliveRb2d == null)
-        {
-            aliveRb2d = alive.GetComponent<Rigidbody2D>();
-        }
+        SetVariableReferences();
 
-        if (aliveCollider2d == null)
-        {
-            aliveCollider2d = alive.GetComponent<Collider2D>();
-        }
-
-        if(soundManager == null)
-        {
-            soundManager = GameObject.FindWithTag("SoundManager").GetComponent<SoundManager>();
-        }
-
-       if(aliveAnimator == null)
-        {
-            aliveAnimator = alive.GetComponent<Animator>();
-        }
-
-       /* if (moveParticles == null)
-        {
-            moveParticles = this.transform.GetChild(0).GetChild(1).GetComponent<ParticleSystem>();
-        }
-
-        if (attackParticles == null)
-        {
-            attackParticles = this.transform.GetChild(0).GetChild(2).GetComponent<ParticleSystem>();
-        }*/
     }
+
+    void SetVariableReferences()
+    {
+        spriteRenderer = alive.GetComponent<SpriteRenderer>();
+        aliveRb2d = alive.GetComponent<Rigidbody2D>();
+        aliveCollider2d = alive.GetComponent<Collider2D>();
+        soundManager = GameObject.FindWithTag("SoundManager").GetComponent<SoundManager>();
+        aliveAnimator = alive.GetComponent<Animator>();
+        alive.GetComponent<EnemyCollisionChecker>().enemyController = this.GetComponent<EnemyController>();
+        alive.GetComponent<EnemyCollisionChecker>().SetVariables();
+    }
+
     private void Start()
     {
         alive = transform.Find("Alive").gameObject;
@@ -156,6 +160,7 @@ public class EnemyController : MonoBehaviour
             case State.Dead:
                 //TODO: CHANGE THIS BACK
                 DropItem();
+                Respawn();
                 // Destroy(alive.gameObject);
                 //UpdateDeadState();
                 break;
@@ -168,11 +173,19 @@ public class EnemyController : MonoBehaviour
         alive.transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    private void CheckDetections()
+
+    private void Respawn()
     {
+        /*GameObject aliveNew = Instantiate(enemyTypeGameObject);
+        aliveNew.transform.parent = this.transform;
+        aliveNew.transform.position = this.transform.position;
+        alive = aliveNew;*/
 
+        alive.transform.position = this.transform.position;
+        currentHealth = maxHealth;
+        alive.gameObject.SetActive(true);
+        this.currentState = State.Moving;
     }
-
 
     //Moving State
     void EnterMovingState()
@@ -203,22 +216,83 @@ public class EnemyController : MonoBehaviour
         {
             case EnemyType.bunny:
 
-                groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-                wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, groundLayer);
+                //groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+                //wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, groundLayer);
 
-               // Debug.Log("Wall? " + wallDetected + " ground? " + groundDetected);
-                if (!groundDetected || wallDetected)
+                //Shooting happens seperately
+
+                /* else
+                 {
+                    bunnyShootTimer -= Time.deltaTime
+                 }*/
+                if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
                 {
-                    //Flip enemy around
-                   // Debug.Log("IFWall? " + wallDetected + " ground? " + groundDetected);
-                    Flip();
+                    facingDirection = 1;
+                  //  alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = false;
+
+                }
+                else //Player is on the left side
+                {
+                    facingDirection = -1;
+                 //   alive.transform.rotation = new Quaternion(alive.transform.rotation.x, -180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = true;
+                }
+
+                if (bunnyIsWaiting) //Pause between movements
+                {
+                    aliveRb2d.velocity = new Vector3(0f, aliveRb2d.velocity.y, 0f);//Vector3.zero;
+
+                   // Debug.Log("Velocity is is " + movement);
+                    bunnyWaitTimer -= Time.deltaTime;
+                    bunnyShootTimer -= Time.deltaTime;
+
+                    if ((bunnyShootTimer < 0) && bunnyShootCounter > 0) //Shoot, reset timer
+                    {
+                        Debug.Log("SHoot!");
+                        bunnyShootTimer = bunnyShootTimerMax;
+                        bunnyShootCounter -= 1;
+
+                        GameObject bullet = Instantiate(bulletList[0]);
+                        bullet.transform.parent = this.transform;
+                        bullet.transform.position = alive.transform.position;
+                        bullet.GetComponent<EnemyBulletScript>().Shoot(player.transform.position);
+
+                        //bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
+                    }
+                    //  Debug.Log("Waitin");
+                    if (bunnyWaitTimer < 0)
+                    {
+                    //    Debug.Log("Wait STOP");
+                        bunnyIsWaiting = false;
+                        bunnyWalkTimer = bunnyWalkTimerMax;
+                        //bunnyMovePos =
+                        //Set movement
+                    }
                 }
                 else
                 {
-                  //  Debug.Log("ELSEWall? " + wallDetected + " ground? " + groundDetected);
-                    //Move the enemy
-                    movement.Set(currentSpeed * facingDirection, aliveRb2d.velocity.y);
-                    aliveRb2d.velocity = movement;
+                    bunnyWalkTimer -= Time.deltaTime;
+
+                    if(bunnyWalkTimer > 0) // Walk until timer runs out
+                    {
+                       // Debug.Log("Walkin!");
+                       
+
+                        movement.Set(currentSpeed * facingDirection, aliveRb2d.velocity.y);
+                        aliveRb2d.velocity = movement;
+                       // Debug.Log("Movement is "+movement);
+                    }
+                    else //Time ran out, now wait 
+                    {
+                      //  Debug.Log("Walk STOP");
+                        bunnyIsWaiting = true;
+                        bunnyWaitTimer = bunnyWaitTimerMax;
+                        bunnyShootTimer = bunnyShootTimerMax;
+                        bunnyShootCounter = bunnyShootCounterMax;
+                        aliveRb2d.velocity = Vector3.zero;
+                    }
+                    
                 }
 
                 break;
@@ -229,7 +303,19 @@ public class EnemyController : MonoBehaviour
                 float distanceToPlayer = Vector3.Distance(alive.transform.position, player.transform.position);
                 //Debug.Log("Bat distance to player is: " + distanceToPlayer);
 
-                if(batIsFleeing) //Hit player, flee,
+                if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
+                {
+                    facingDirection = 1;
+                    spriteRenderer.flipX = false;
+
+                }
+                else //Player is on the left side
+                {
+                    facingDirection = -1;
+                    spriteRenderer.flipX = true;
+                }
+
+                if (batIsFleeing) //Hit player, flee,
                 {
                     alive.transform.position = Vector3.MoveTowards(alive.transform.position, batFleePos, currentSpeed*4);
                     if(alive.transform.position == batFleePos)
@@ -277,6 +363,24 @@ public class EnemyController : MonoBehaviour
             case EnemyType.rooster:
                 break;
             default:
+                //Default back and forth movement, use for simple enemies if needed
+               /* groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+                wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, groundLayer);
+
+                // Debug.Log("Wall? " + wallDetected + " ground? " + groundDetected);
+                if (!groundDetected || wallDetected)
+                {
+                    //Flip enemy around
+                    // Debug.Log("IFWall? " + wallDetected + " ground? " + groundDetected);
+                    Flip();
+                }
+                else
+                {
+                    //  Debug.Log("ELSEWall? " + wallDetected + " ground? " + groundDetected);
+                    //Move the enemy
+                    movement.Set(currentSpeed * facingDirection, aliveRb2d.velocity.y);
+                    aliveRb2d.velocity = movement;
+                }*/
                 break;
         }
     }
@@ -547,9 +651,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void DestroyEnemy()
+    void DespawnEnemy()
     {
-        Destroy(alive.gameObject);
+       // Destroy(alive.gameObject);
     }
 
     public void DropItem()
@@ -569,19 +673,31 @@ public class EnemyController : MonoBehaviour
             {
                 GameObject itemDrop = dropItemsList[1];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
-                Destroy(alive.gameObject);
+                // Destroy(alive.gameObject);
+                alive.gameObject.SetActive(false);
 
             }
             else if ((dropChance > 0f) && (dropChance <= 40f)) //Small health pickup
             {
                 GameObject itemDrop = dropItemsList[0];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
-                Destroy(alive.gameObject);
+                //  Destroy(alive.gameObject);
+                alive.gameObject.SetActive(false);
 
             }
+            else if ((dropChance > 75f) && (dropChance <= 80f)) //Life pickup
+            {
+                GameObject itemDrop = dropItemsList[2];
+                Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
+                // Destroy(alive.gameObject);
+                alive.gameObject.SetActive(false);
+
+            }
+
             else
             {
-                Destroy(alive.gameObject);
+                //  Destroy(alive.gameObject);
+                alive.gameObject.SetActive(false);
             }
             //Kill enemy afterwards
             //Invoke("DestroyEnemy", 1f);

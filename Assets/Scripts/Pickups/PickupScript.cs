@@ -14,7 +14,8 @@ public class PickupScript : MonoBehaviour
         healthSmall,
         healthLarge,
         ammoSmall,
-        ammoLarge
+        ammoLarge,
+        lifePickup
     }
     private void Awake()
     {
@@ -23,12 +24,25 @@ public class PickupScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.otherRigidbody != null && other.gameObject.GetComponent<PlayerController2D>())
+        if(itemType == Type.healthLarge || itemType == Type.healthSmall)
         {
-            PlayerController2D playerController  = other.gameObject.GetComponent<PlayerController2D>();
-            playerController.IncreaseHealth(healthIncrease);
-            Destroy(transform.gameObject);
+            if (other.otherRigidbody != null && other.gameObject.GetComponent<PlayerController2D>())
+            {
+                PlayerController2D playerController = other.gameObject.GetComponent<PlayerController2D>();
+                playerController.IncreaseHealth(healthIncrease);
+                Destroy(transform.gameObject);
+            }
         }
+        else if(itemType == Type.lifePickup)
+        {
+            if (other.otherRigidbody != null && other.gameObject.GetComponent<PlayerController2D>())
+            {
+                PlayerController2D playerController = other.gameObject.GetComponent<PlayerController2D>();
+                playerController.IncreaseLives(1);
+                Destroy(transform.gameObject);
+            }
+        }
+        
 
         if (ignoreLayers == (ignoreLayers | (1 << other.gameObject.layer)))
         {

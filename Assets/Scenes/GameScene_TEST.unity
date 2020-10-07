@@ -14631,6 +14631,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemySpawner Drone
       objectReference: {fileID: 0}
+    - target: {fileID: 795930954527325249, guid: 09f00ac251ffcfc4189469b7833fcc28, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09f00ac251ffcfc4189469b7833fcc28, type: 3}
 --- !u!114 &1072005239133566422

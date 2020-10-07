@@ -260,6 +260,12 @@ public class PlayerController2D : MonoBehaviour
 
     }
 
+    public void IncreaseLives(int amount)
+    {
+        playerLivesCurrent += amount;
+        CreateParticles(4);
+        soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f);
+    }
 
     public void RemoveHealth(int damage)
     {
@@ -461,6 +467,16 @@ public class PlayerController2D : MonoBehaviour
             RemoveHealth(enemy.GetDamage());
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<EnemyBulletScript>())
+        {
+            EnemyBulletScript enemyBullet = other.attachedRigidbody.GetComponent<EnemyBulletScript>();
+            RemoveHealth(enemyBullet.damage);
+            Destroy(other.transform.gameObject);
+        }
     }
 
     void SlopeCheck()
