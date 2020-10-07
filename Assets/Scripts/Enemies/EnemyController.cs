@@ -84,6 +84,8 @@ public class EnemyController : MonoBehaviour
         groundCheck,
         wallCheck;
 
+    //If spawned once, makes sure respawn does not happen if enemy dies close to the respawn point!
+    bool spawnedOnce;
     [SerializeField]
     private LayerMask groundLayer;
     private bool groundDetected;
@@ -127,8 +129,50 @@ public class EnemyController : MonoBehaviour
         currentHealth = maxHealth;
         player = GameObject.Find("Player");
 
+        //Despawn, once player is in area, spawn them again
+        DespawnEnemy();
+
         SetVariableReferences();
 
+    }
+
+    public void CheckPlayerDistance()
+    {
+        //18 Is current half of screen size width, change if screensize changes
+
+        float spawnerDistanceToPlayer = player.transform.position.x - this.transform.position.x;
+        float aliveDistanceToPlayer = player.transform.position.x - alive.transform.position.x;
+
+        if (alive.activeSelf == false) // Is alive currently despawned?
+        {
+            if ((spawnerDistanceToPlayer >= -18) && (spawnerDistanceToPlayer <= 18) && !spawnedOnce)
+            {
+                Debug.Log("Player close, RESPAWN");
+                //Player is close enough, spawn enemy!
+                RespawnEnemy();
+                spawnedOnce = true;
+            }
+            else if ((spawnerDistanceToPlayer < -18) || (spawnerDistanceToPlayer > 18))
+            {
+                Debug.Log("Player far enough, enemy dead, can put spawnedOnce back to false");
+                spawnedOnce = false;
+            }
+            else
+            {
+                //Nothing needed here
+            }
+        }
+        else //Alive is active, do not respawn when close enough, but instead if far enough from ALIVE, despawn it.
+        {
+
+            if ((aliveDistanceToPlayer < -18) || (aliveDistanceToPlayer > 18))
+            {
+                Debug.Log("Player far enough, despawn!");
+                DespawnEnemy();
+            }
+        }
+            
+        
     }
 
     void SetVariableReferences()
@@ -149,22 +193,27 @@ public class EnemyController : MonoBehaviour
     }
     private void Update()
     {
-        switch (currentState)
+        CheckPlayerDistance();
+        if(alive.activeSelf == true)
         {
-            case State.Moving:
-                UpdateMovingState();
-                break;
-            case State.Attacking:
-                UpdateAttackingState();
-                break;
-            case State.Dead:
-                //TODO: CHANGE THIS BACK
-                DropItem();
-                Respawn();
-                // Destroy(alive.gameObject);
-                //UpdateDeadState();
-                break;
+            switch (currentState)
+            {
+                case State.Moving:
+                    UpdateMovingState();
+                    break;
+                case State.Attacking:
+                    UpdateAttackingState();
+                    break;
+                case State.Dead:
+                    //TODO: CHANGE THIS BACK
+                    DropItem();
+                    // RespawnEnemy();
+                    // Destroy(alive.gameObject);
+                    //UpdateDeadState();
+                    break;
+            }
         }
+        
     }
 
     private void Flip()
@@ -174,13 +223,14 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    private void Respawn()
+    private void RespawnEnemy()
     {
         /*GameObject aliveNew = Instantiate(enemyTypeGameObject);
         aliveNew.transform.parent = this.transform;
         aliveNew.transform.position = this.transform.position;
         alive = aliveNew;*/
 
+        Debug.Log("Respawned!");
         alive.transform.position = this.transform.position;
         currentHealth = maxHealth;
         alive.gameObject.SetActive(true);
@@ -249,7 +299,6 @@ public class EnemyController : MonoBehaviour
 
                     if ((bunnyShootTimer < 0) && bunnyShootCounter > 0) //Shoot, reset timer
                     {
-                        Debug.Log("SHoot!");
                         bunnyShootTimer = bunnyShootTimerMax;
                         bunnyShootCounter -= 1;
 
@@ -653,7 +702,9 @@ public class EnemyController : MonoBehaviour
 
     void DespawnEnemy()
     {
-       // Destroy(alive.gameObject);
+        // Destroy(alive.gameObject);
+        Debug.Log("Despawned");
+        alive.gameObject.SetActive(false);
     }
 
     public void DropItem()
@@ -674,7 +725,6 @@ public class EnemyController : MonoBehaviour
                 GameObject itemDrop = dropItemsList[1];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
                 // Destroy(alive.gameObject);
-                alive.gameObject.SetActive(false);
 
             }
             else if ((dropChance > 0f) && (dropChance <= 40f)) //Small health pickup
@@ -682,15 +732,13 @@ public class EnemyController : MonoBehaviour
                 GameObject itemDrop = dropItemsList[0];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
                 //  Destroy(alive.gameObject);
-                alive.gameObject.SetActive(false);
 
             }
-            else if ((dropChance > 75f) && (dropChance <= 80f)) //Life pickup
+            else if ((dropChance > 75f) && (dropChance <= 77.5f)) //Life pickup
             {
                 GameObject itemDrop = dropItemsList[2];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
                 // Destroy(alive.gameObject);
-                alive.gameObject.SetActive(false);
 
             }
 
@@ -698,9 +746,11 @@ public class EnemyController : MonoBehaviour
             {
                 //  Destroy(alive.gameObject);
                 alive.gameObject.SetActive(false);
+
             }
-            //Kill enemy afterwards
-            //Invoke("DestroyEnemy", 1f);
+
+            //Then despawn enemy
+            DespawnEnemy();
         }
 
     }
