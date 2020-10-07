@@ -221,4 +221,4 @@ MonoBehaviour:
   healthIncrease: 15
   ignoreLayers:
     serializedVersion: 2
-    m_Bits: 4608
+    m_Bits: 4609

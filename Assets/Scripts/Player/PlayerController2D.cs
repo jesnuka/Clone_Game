@@ -12,6 +12,9 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField]
     SoundManager soundManager;
 
+    [SerializeField]
+    GameObject blackoutUI;
+
     public Sprite healthBarBlock;
     public Sprite healthBarEmpty;
 
@@ -66,6 +69,8 @@ public class PlayerController2D : MonoBehaviour
     public float knockbackTimeMax;
     public int knockbackDirection;
 
+    public float gameOverTimer;
+    public float gameOverTimerMax;
 
     public float jumpRememberTime;
     public float groundedRememberTime;
@@ -109,7 +114,8 @@ public class PlayerController2D : MonoBehaviour
         Climbing,
         Normal,
         Falling,
-        Knockback
+        Knockback,
+        Respawning
         //Invincible
     }
     private void Awake()
@@ -190,6 +196,13 @@ public class PlayerController2D : MonoBehaviour
                 knockbackTime -= Time.deltaTime;
                 KnockbackPlayer(knockbackDirection);
             }
+            else if (currentState == State.Respawning)
+            {
+                // Debug.Log("Respawning");
+               // knockbackTime -= Time.deltaTime;
+                RespawnPlayer();
+            }
+            
             if (isInvincible)
             {
                 // Debug.Log("Invincible");
@@ -229,7 +242,7 @@ public class PlayerController2D : MonoBehaviour
             isFacingLeft = true;
             spriteRenderer.flipX = true;
         }
-        if((currentState != State.Knockback) && (currentState !=  State.Dead))
+        if((currentState != State.Knockback) && (currentState !=  State.Dead) && (currentState != State.Respawning))
         {
             if ((Input.GetKeyDown("space")) || (Input.GetKeyDown(KeyCode.X)) || (Input.GetButtonDown("Jump")))
             {
@@ -251,8 +264,20 @@ public class PlayerController2D : MonoBehaviour
 
     void RespawnPlayer()
     {
-        playerHealthCurrent = playerHealthMax;
-        transform.position = currentCheckpoint.transform.position;
+        gameOverTimer -= Time.deltaTime;
+        if(gameOverTimer < 0 )
+        {
+            blackoutUI.SetActive(false);
+            playerHealthCurrent = playerHealthMax;
+            transform.position = currentCheckpoint.transform.position;
+            currentState = State.Normal;
+        }
+        else
+        {
+            blackoutUI.SetActive(true);
+            //currentState = State.Respawning;
+        }
+        
 
         //Add some screen black fade etc. some delay
 
@@ -260,10 +285,20 @@ public class PlayerController2D : MonoBehaviour
 
     }
 
+    public void IncreaseLives(int amount)
+    {
+        if (currentState != State.Respawning)
+        {
+            playerLivesCurrent += amount;
+            CreateParticles(4);
+            soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f);
+        }
+    }
 
     public void RemoveHealth(int damage)
     {
-        if(!isInvincible)
+
+        if(!isInvincible && currentState != State.Respawning)
         {
             if (playerHealthCurrent > 0)
             {
@@ -276,7 +311,9 @@ public class PlayerController2D : MonoBehaviour
                     if(playerLivesCurrent > 0)
                     {
                         playerLivesCurrent -= 1;
-                        RespawnPlayer();
+                        gameOverTimer = gameOverTimerMax;
+                        currentState = State.Respawning;
+                        
                     }
                     else
                     {
@@ -291,7 +328,6 @@ public class PlayerController2D : MonoBehaviour
                     rb2d.velocity = Vector2.zero;
                     currentState = State.Knockback;
                     knockbackTime = knockbackTimeMax;
-                    Debug.Log("damaged!");
                     soundManager.PlaySound(SoundManager.Sound.playerTakeDamage, 1f);
                 }
             }
@@ -314,26 +350,32 @@ public class PlayerController2D : MonoBehaviour
 
     public void IncreaseHealth(int healthUp)
     {
-        if(playerHealthCurrent < playerHealthMax)
+        if(currentState != State.Respawning)
         {
-            int tempValue = playerHealthCurrent;
-            tempValue += healthUp;
-            if(tempValue > playerHealthMax)
+            if(playerHealthCurrent < playerHealthMax)
             {
-                Debug.Log("Already Full HP");
-                playerHealthCurrent = playerHealthMax;
+                int tempValue = playerHealthCurrent;
+                tempValue += healthUp;
+                if(tempValue > playerHealthMax)
+                {
+                    //Max out HP
+                    CreateParticles(4);
+                    soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f);
+                    playerHealthCurrent = playerHealthMax;
+                }
+                else
+                {
+                    //Heal
+                    CreateParticles(4);
+                    soundManager.PlaySound(SoundManager.Sound.playerPickup,1f);
+                    playerHealthCurrent = tempValue;
+                }
             }
             else
             {
-                Debug.Log("Healed");
-                CreateParticles(4);
-                soundManager.PlaySound(SoundManager.Sound.playerPickup,1f);
-                playerHealthCurrent = tempValue;
+                //Already have max health
+                Debug.Log("Already Full HP");
             }
-        }
-        else
-        {
-            //Already have max health
         }
     }
 
@@ -463,6 +505,16 @@ public class PlayerController2D : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<EnemyBulletScript>())
+        {
+            EnemyBulletScript enemyBullet = other.attachedRigidbody.GetComponent<EnemyBulletScript>();
+            RemoveHealth(enemyBullet.damage);
+            Destroy(other.transform.gameObject);
+        }
+    }
+
     void SlopeCheck()
     {
         Vector2 checkPosition = transform.position - new Vector3(0.0f, boxCollider2d.bounds.extents.y);
@@ -532,7 +584,6 @@ public class PlayerController2D : MonoBehaviour
         invincibilityTime = invincibilityTimeMax;
         if (knockbackTime < 0)
         {
-            Debug.Log("Knockback ended");
             knockbackDirection = 0;
             currentState = State.Normal;
         }
