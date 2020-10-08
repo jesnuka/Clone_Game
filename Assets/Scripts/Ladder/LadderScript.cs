@@ -11,7 +11,7 @@ public class LadderScript : MonoBehaviour
     public Rigidbody2D playerRigidbody;
     public Collider2D playerCollider;
 
-    bool playerIsColliding;
+    public bool playerIsColliding;
 
     //public GameObject ladderParent;
 

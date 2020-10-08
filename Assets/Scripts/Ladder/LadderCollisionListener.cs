@@ -6,6 +6,7 @@ public class LadderCollisionListener : MonoBehaviour
 {
     public GameObject playerObject;
     public PlayerController2D player;
+    public LadderScript ladderMain;
 
     bool touchingPlayer;
 
@@ -35,13 +36,17 @@ public class LadderCollisionListener : MonoBehaviour
         if (collision.tag == "Player")
         {
             touchingPlayer = true;
-
+            ladderMain.playerIsColliding = true;
         }
 
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Player")
-            touchingPlayer =  false;
+        {
+            touchingPlayer = false;
+            ladderMain.playerIsColliding = false;
+        }
+            
     }
 }

@@ -277,7 +277,6 @@ public class PlayerController2D : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Z) || Input.GetButtonDown("Fire1"))
             {
-                Debug.Log("Shootcounter is " + shootCounter + "and countertimer is " + shootCounterTimer);
                 if ((shootCounter > 0) && (shootTimer < 0))
                 {
                     shootCounterTimer = shootCounterTimerMax;
@@ -631,9 +630,7 @@ public class PlayerController2D : MonoBehaviour
         //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
         //velocity change for rest of knockback
         //rb2d.AddForce(new Vector2(0, 345f));
-        Debug.Log("Knkc! velocity is "+rb2d.velocity + "Direction is " + direction);
-        rb2d.velocity = new Vector2(3f * direction, rb2d.velocity.y);
-        Debug.Log("ggelocity is " + rb2d.velocity + "Direction is " + direction);
+        rb2d.velocity = new Vector2(3f * direction, rb2d.velocity.y-1f);
 
         //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
         //velocity change for rest of knockback

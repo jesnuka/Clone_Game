@@ -409,9 +409,9 @@ public class EnemyController : MonoBehaviour
                         //Sees player
                     }
 
-                    if (distanceToPlayer < 1) // If player is invincible, bat still needs to fly off!
+                    if (distanceToPlayer < 1) // If player is invincible, bat does NOT fly off in MM2
                     {
-                        TouchedPlayer();
+                      //  TouchedPlayer();
                     }
                 }
 

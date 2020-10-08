@@ -8,6 +8,7 @@ public class TransitionPoint : MonoBehaviour
     public Direction transitionDirection;
 
     public bool isOneShot;
+    public bool followsAfter;
 
 
     public enum Direction
@@ -31,21 +32,26 @@ public class TransitionPoint : MonoBehaviour
             switch (transitionDirection)
             {
                 case Direction.left:
-                    cameraManager.TransitionLeft();
+                    cameraManager.TransitionLeft(followsAfter);
                     transitionDirection = Direction.right;
                     break;
                 case Direction.right:
-                    cameraManager.TransitionRight();
+                    cameraManager.TransitionRight(followsAfter);
                     transitionDirection = Direction.left;
                     break;
                 case Direction.up:
-                    cameraManager.TransitionUp();
+                    cameraManager.TransitionUp(followsAfter);
                     transitionDirection = Direction.down;
                     break;
                 case Direction.down:
-                    cameraManager.TransitionDown();
+                    cameraManager.TransitionDown(followsAfter);
                     transitionDirection = Direction.up;
                     break;
+            }
+            
+            if(isOneShot)
+            {
+                Destroy(this.gameObject);
             }
             
 
