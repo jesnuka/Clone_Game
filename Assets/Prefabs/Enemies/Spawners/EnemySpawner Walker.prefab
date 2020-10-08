@@ -4786,7 +4786,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -9598,7 +9598,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -9669,6 +9669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a66ec4967cfa84b90492b8d105ba0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 3960886628164629474}
   player: {fileID: 0}
   dropItemsList:
   - {fileID: 5740047203637637813, guid: e562889855e0f784ab58011372147f42, type: 3}
@@ -9700,6 +9701,12 @@ MonoBehaviour:
   bunnyShootTimerMax: 2
   bunnyShootCounter: 0
   bunnyShootCounterMax: 3
+  hotdogWaitTimer: 0
+  hotdogWaitTimerMax: 0
+  hotdogShootTimer: 0
+  hotdogShootTimerMax: 0
+  hotdogShootCounter: 0
+  hotdogShootCounterMax: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 3402251517440583537}
@@ -14527,7 +14534,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -14621,6 +14628,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5782108023686896462, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}
 --- !u!1 &3402251518077742224 stripped
@@ -14641,5 +14652,10 @@ Transform:
 --- !u!4 &3402251517067362302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5331963172171978578, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}
+  m_PrefabInstance: {fileID: 7406673145409824940}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &3960886628164629474 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5782108023686896462, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}
   m_PrefabInstance: {fileID: 7406673145409824940}
   m_PrefabAsset: {fileID: 0}
