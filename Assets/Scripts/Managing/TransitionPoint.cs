@@ -9,6 +9,7 @@ public class TransitionPoint : MonoBehaviour
 
     public bool isOneShot;
 
+
     public enum Direction
     {
         left,

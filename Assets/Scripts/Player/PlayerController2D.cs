@@ -71,6 +71,13 @@ public class PlayerController2D : MonoBehaviour
     public float knockbackTimeMax;
     public int knockbackDirection;
 
+    public float shootCounter;
+    public float shootCounterMax;
+    public float shootCounterTimer;
+    public float shootCounterTimerMax;
+    public float shootTimer;
+    public float shootTimerMax;
+
     public float gameOverTimer;
     public float gameOverTimerMax;
 
@@ -201,7 +208,8 @@ public class PlayerController2D : MonoBehaviour
             else if (currentState == State.Respawning)
             {
                 // Debug.Log("Respawning");
-               // knockbackTime -= Time.deltaTime;
+                // knockbackTime -= Time.deltaTime;
+                rb2d.velocity = Vector3.zero;
                 RespawnPlayer();
             }
             
@@ -232,6 +240,18 @@ public class PlayerController2D : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        shootCounterTimer -= Time.deltaTime;
+        shootTimer -= Time.deltaTime;
+
+        if(shootCounterTimer < 0)
+        {
+            shootCounterTimer = shootCounterTimerMax;
+            if(shootCounter < shootCounterMax)
+            {
+                shootCounter += 1;
+            }
+        }
+
         if (horizontalInput > 0)
         {
             isFacingRight = true;
@@ -257,7 +277,14 @@ public class PlayerController2D : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Z) || Input.GetButtonDown("Fire1"))
             {
-                WeaponFire();
+                Debug.Log("Shootcounter is " + shootCounter + "and countertimer is " + shootCounterTimer);
+                if ((shootCounter > 0) && (shootTimer < 0))
+                {
+                    shootCounterTimer = shootCounterTimerMax;
+                    shootCounter -= 1;
+                    WeaponFire();
+                }
+                
             }
         }
         
@@ -510,6 +537,16 @@ public class PlayerController2D : MonoBehaviour
         if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<EnemyBulletScript>())
         {
             EnemyBulletScript enemyBullet = other.attachedRigidbody.GetComponent<EnemyBulletScript>();
+
+            if (enemyBullet.transform.position.x > transform.position.x)//Bullet on the right side
+            {
+                knockbackDirection = -1;
+            }
+            else //enemy on the left side
+            {
+                knockbackDirection = 1;
+            }
+
             RemoveHealth(enemyBullet.damage);
             if(enemyBullet.bulletType != EnemyBulletScript.BulletType.fire)
             {
@@ -591,16 +628,17 @@ public class PlayerController2D : MonoBehaviour
             knockbackDirection = 0;
             currentState = State.Normal;
         }
-            //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
-            //velocity change for rest of knockback
-            //rb2d.AddForce(new Vector2(0, 345f));
+        //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
+        //velocity change for rest of knockback
+        //rb2d.AddForce(new Vector2(0, 345f));
+        Debug.Log("Knkc! velocity is "+rb2d.velocity + "Direction is " + direction);
         rb2d.velocity = new Vector2(3f * direction, rb2d.velocity.y);
-            
-        
-            //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
-            //velocity change for rest of knockback
-            //rb2d.AddForce(new Vector2(0,45f));
-       // rb2d.velocity = new Vector2(3f, rb2d.velocity.y);
+        Debug.Log("ggelocity is " + rb2d.velocity + "Direction is " + direction);
+
+        //AddForce for small upward bounce,-> NOT USED CURRENTLY, SLOWS FALL TOO!
+        //velocity change for rest of knockback
+        //rb2d.AddForce(new Vector2(0,45f));
+        // rb2d.velocity = new Vector2(3f, rb2d.velocity.y);
     }
 
     void InvincibilityFrames()

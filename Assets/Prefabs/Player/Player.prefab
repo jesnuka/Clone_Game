@@ -294,8 +294,14 @@ MonoBehaviour:
   invincibilityTime: 0
   invincibilityTimeMax: 1.5
   knockbackTime: 0
-  knockbackTimeMax: 0.25
+  knockbackTimeMax: 0.5
   knockbackDirection: 0
+  shootCounter: 1
+  shootCounterMax: 1
+  shootCounterTimer: 0
+  shootCounterTimerMax: 0.1
+  shootTimer: 0
+  shootTimerMax: 0.1
   gameOverTimer: 0
   gameOverTimerMax: 2
   jumpRememberTime: 0.1

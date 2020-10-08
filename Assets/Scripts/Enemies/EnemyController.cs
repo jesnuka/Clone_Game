@@ -409,10 +409,10 @@ public class EnemyController : MonoBehaviour
                         //Sees player
                     }
 
-                   /* if (distanceToPlayer < 1) // This was moved to TouchedPlayer() function, which is called from EnemyCollisionChecker
+                    if (distanceToPlayer < 1) // If player is invincible, bat still needs to fly off!
                     {
-                       
-                    }*/
+                        TouchedPlayer();
+                    }
                 }
 
                 break;

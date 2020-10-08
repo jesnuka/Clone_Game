@@ -5,11 +5,13 @@ using UnityEngine;
 public class LadderScript : MonoBehaviour
 {
     Collider2D ladderCollider;
-    CompositeCollider2D ladderCompositeCollider;
+    public CompositeCollider2D ladderCompositeCollider;
     public GameObject playerObject;
     public PlayerController2D player;
     public Rigidbody2D playerRigidbody;
     public Collider2D playerCollider;
+
+    bool playerIsColliding;
 
     //public GameObject ladderParent;
 
@@ -46,7 +48,7 @@ public class LadderScript : MonoBehaviour
 
     private void Update()
     {
-        if(!(player.currentState == PlayerController2D.State.Climbing))
+        if(!(player.currentState == PlayerController2D.State.Climbing) && !playerIsColliding)
         {
             canCollide = true;
         }

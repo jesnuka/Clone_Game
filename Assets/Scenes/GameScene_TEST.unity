@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraMoveTime: 0
-  cameraMoveSpeed: 0.1
+  cameraMoveSpeed: 0.01
   currentTransform: {fileID: 0}
   transitionIndex: 0
   currentMode: 0
@@ -1345,7 +1345,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -1359,6 +1359,42 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.28, y: 1.28}
   m_EdgeRadius: 0
+--- !u!66 &627175869
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627175863}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 627175864}
+    m_ColliderPaths:
+    - - X: 6399707
+        Y: -6400000
+      - X: 6399707
+        Y: 6400000
+      - X: -6400000
+        Y: 6399707
+      - X: -6399707
+        Y: -6400000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 0.6399414, y: -0.64}
+      - {x: 0.6399414, y: 0.64}
+      - {x: -0.64, y: 0.6399414}
+      - {x: -0.6399414, y: -0.64}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
 --- !u!1 &677227408
 GameObject:
   m_ObjectHideFlags: 0
@@ -3803,6 +3839,52 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3a1b65f39786e74ea7b7aca9b0847a5, type: 3}
+--- !u!1 &1709338435 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2850159328685419050, guid: 438662f272056064d9299f2a62e05e33, type: 3}
+  m_PrefabInstance: {fileID: 2850159329367990834}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &1709338438 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 2850159328685419048, guid: 438662f272056064d9299f2a62e05e33, type: 3}
+  m_PrefabInstance: {fileID: 2850159329367990834}
+  m_PrefabAsset: {fileID: 0}
+--- !u!66 &1709338441
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709338435}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 1709338438}
+    m_ColliderPaths:
+    - - X: 6399707
+        Y: -6400000
+      - X: 6399707
+        Y: 6400000
+      - X: -6400000
+        Y: 6399707
+      - X: -6399707
+        Y: -6400000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 0.6399414, y: -0.64}
+      - {x: 0.6399414, y: 0.64}
+      - {x: -0.64, y: 0.6399414}
+      - {x: -0.6399414, y: -0.64}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
 --- !u!1001 &1790430593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4286,6 +4368,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4371711917605724870, guid: 750c15a56b53e7c4fa2955acb2d8c58f, type: 3}
+      propertyPath: isOneShot
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7280488631520500930, guid: 750c15a56b53e7c4fa2955acb2d8c58f, type: 3}
       propertyPath: m_Name
       value: CameraTransitionPoint
@@ -4343,6 +4429,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1004077217}
     m_Modifications:
+    - target: {fileID: 2850159328685419048, guid: 438662f272056064d9299f2a62e05e33, type: 3}
+      propertyPath: m_UsedByComposite
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2850159329477760906, guid: 438662f272056064d9299f2a62e05e33, type: 3}
       propertyPath: m_Name
       value: Ladder
@@ -4625,7 +4715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6169048647139164419, guid: 59942be591151f34680280918ba07c18, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59942be591151f34680280918ba07c18, type: 3}
@@ -4652,6 +4742,26 @@ PrefabInstance:
       propertyPath: currentCheckpoint
       value: 
       objectReference: {fileID: 829414543}
+    - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
+      propertyPath: knockbackTimeMax
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
+      propertyPath: shootTimerMax
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
+      propertyPath: shootCounter
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
+      propertyPath: shootCounterTimerMax
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
+      propertyPath: shootCounterMax
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8377331186771214316, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
       propertyPath: m_Name
       value: Player

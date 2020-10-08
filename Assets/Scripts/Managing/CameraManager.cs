@@ -69,12 +69,14 @@ public class CameraManager : MonoBehaviour
     
     public void TransitionLeft()
     {
+        cameraMoveTime = 0;
         transitionIndex = 0;
         currentMode = Mode.Transition;
         transitionTarget = new Vector3(transform.position.x - stageDimensions.x, transform.position.y, transform.position.z);
     }
     public void TransitionRight()
     {
+        cameraMoveTime = 0;
         transitionIndex = 1;
         currentMode = Mode.Transition;
         //transitionTarget = new Vector3(transform.position.x + Camera.main.pixelWidth, transform.position.y, 0f);
@@ -82,12 +84,14 @@ public class CameraManager : MonoBehaviour
     }
     public void TransitionUp()
     {
+        cameraMoveTime = 0;
         transitionIndex = 2;
         currentMode = Mode.Transition;
         transitionTarget = new Vector3(transform.position.x, transform.position.y + stageDimensions.y, transform.position.z);
     }
     public void TransitionDown()
     {
+        cameraMoveTime = 0;
         transitionIndex = 3;
         currentMode = Mode.Transition;
         transitionTarget = new Vector3(transform.position.x, transform.position.y - stageDimensions.y, transform.position.z);
