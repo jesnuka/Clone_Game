@@ -289,14 +289,14 @@ public class EnemyController : MonoBehaviour
                 if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
                 {
                     facingDirection = 1;
-                  //  alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                   // alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
                     spriteRenderer.flipX = true;
 
                 }
                 else //Player is on the left side
                 {
                     facingDirection = -1;
-                 //   alive.transform.rotation = new Quaternion(alive.transform.rotation.x, -180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    //alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
                     spriteRenderer.flipX = false;
                 }
 
@@ -366,12 +366,14 @@ public class EnemyController : MonoBehaviour
                 if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
                 {
                     facingDirection = 1;
+                    alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
                     spriteRenderer.flipX = false;
 
                 }
                 else //Player is on the left side
                 {
                     facingDirection = -1;
+                    alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
                     spriteRenderer.flipX = true;
                 }
 
@@ -760,7 +762,7 @@ public class EnemyController : MonoBehaviour
             //RandomNum can be removed, if items are later chosen depending on dropChance
           //  int randomNum = Random.Range(0, dropItemsList.Length);
             float dropChance = Random.Range(0.0f, 100f);
-            Debug.Log("Dropchance: " + dropChance);
+            //Debug.Log("Dropchance: " + dropChance);
 
             //With more items, add more to list. If specific items should have different drop chance, add if- here, and choose from list [n]
 
