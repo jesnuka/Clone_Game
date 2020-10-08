@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyTimer: 8
-  speed: 5
+  speed: 8
   damage: 2
   destroyOnWalls: 0
   destroyOnEnemy: 0

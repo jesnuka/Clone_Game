@@ -16,12 +16,8 @@ public class CameraManager : MonoBehaviour
     Transform currentTransform;
 
 
-    //Place sets of transitions here, when moving to Stationary screens 
-    [SerializeField]
-    Transform[] transitionBegin;
-    //These "End" transitions also work as the screens that the camera will stay Stationary in, unless stated otherwise
-    [SerializeField]
-    Transform[] transitionEnd;
+    //Transform transitionBegin;
+    Transform transitionTarget;
 
     //Use this when calling TransitionCamera function
     //It will select the specific begin and end transitions from the list
@@ -70,18 +66,36 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    public void TransitionCamera(int i)
+    
+    public void TransitionLeft()
+    {
+
+    }
+    public void TransitionRight()
+    {
+
+    }
+    public void TransitionUp()
+    {
+
+    }
+    public void TransitionDown()
+    {
+
+    }
+
+    public void TransitionCamera(int i) //The value i is the direction. 0 = left, 1 = right, 2 = up, 3 = down
     {
         if (currentMode == Mode.Transition)
         {
             cameraMoveTime += Time.deltaTime * cameraMoveSpeed;
-            transform.position = Vector3.Lerp(transitionBegin[i].position, transitionEnd[i].position, cameraMoveTime);
+            transform.position = Vector3.Lerp(this.transform.position, transitionTarget.position, cameraMoveTime);
         }
 
         if (cameraMoveTime >= 1)
         {
             currentMode = Mode.Stationary;
-            transform.position = transitionEnd[i].position;
+            transform.position = transitionTarget.position;
         }
     }
 

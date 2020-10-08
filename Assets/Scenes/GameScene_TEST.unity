@@ -679,8 +679,6 @@ MonoBehaviour:
   cameraMoveTime: 0
   cameraMoveSpeed: 0.1
   currentTransform: {fileID: 0}
-  transitionBegin: []
-  transitionEnd: []
   transitionIndex: 0
   currentMode: 0
 --- !u!1 &181091717
@@ -1517,6 +1515,7 @@ MonoBehaviour:
   playerAnimator: {fileID: 2041742375}
   spriteRenderer: {fileID: 2041742376}
   soundManager: {fileID: 325340315}
+  halfScreenWidth: 18
   blackoutUI: {fileID: 2002410226}
   healthBarBlock: {fileID: 21300000, guid: 9f7ef841a2df513448b02d9309194361, type: 3}
   healthBarEmpty: {fileID: 21300000, guid: 4f11eb3443e3f394ab67d0d836e90cad, type: 3}
@@ -1535,7 +1534,7 @@ MonoBehaviour:
   weaponAmmo: 30
   playerLivesCurrent: 3
   playerHealthMax: 30
-  playerHealthCurrent: 4
+  playerHealthCurrent: 30
   animationDelayTime: 0
   animationDelayTimeMax: 0.2
   defaultGravity: 6
@@ -1552,7 +1551,7 @@ MonoBehaviour:
   knockbackTimeMax: 0.25
   knockbackDirection: 0
   gameOverTimer: 0
-  gameOverTimerMax: 3
+  gameOverTimerMax: 2
   jumpRememberTime: 0.1
   groundedRememberTime: 0.1
   ladderCheckDistance: 0.2
@@ -14939,6 +14938,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemySpawner Walker
       objectReference: {fileID: 0}
+    - target: {fileID: 4488154646474677830, guid: aa2014f0a9428c243849640f8c57d861, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4488154646474677831, guid: aa2014f0a9428c243849640f8c57d861, type: 3}
       propertyPath: m_LocalPosition.x
       value: 18.94
@@ -15113,6 +15116,67 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13087c200ad64f34aabf31776d705344, type: 3}
+--- !u!1001 &7962953416922577505
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 18.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164418, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164419, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_Name
+      value: EnemySpawner Pipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169048647139164419, guid: 59942be591151f34680280918ba07c18, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 59942be591151f34680280918ba07c18, type: 3}
 --- !u!1 &8535687683389290884
 GameObject:
   m_ObjectHideFlags: 0
