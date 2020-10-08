@@ -58,7 +58,6 @@ public class EnemyCollisionChecker : MonoBehaviour
         {
             if (collision.gameObject.layer == 8 || collision.gameObject.layer == 10) //If collider is ground collider
             {
-                Debug.Log("Ground, ignored");
                 Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), collision.collider);
             }
         }

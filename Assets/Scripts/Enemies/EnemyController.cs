@@ -71,7 +71,18 @@ public class EnemyController : MonoBehaviour
     // -- Bunny related ends
 
 
+    // -- Hotdog related starts
+    public float hotdogWaitTimer;
+    public float hotdogWaitTimerMax;
 
+    public float hotdogShootTimer;
+    public float hotdogShootTimerMax;
+    public int hotdogShootCounter;
+    public int hotdogShootCounterMax;
+
+    bool hotdogIsWaiting;
+
+    // -- Hotdog related ends
 
 
     [SerializeField]
@@ -138,23 +149,23 @@ public class EnemyController : MonoBehaviour
 
     public void CheckPlayerDistance()
     {
-        //18 Is current half of screen size width, change if screensize changes
+        //halfScreenWidth Is current half of screen size width, change if screensize changes from player
 
         float spawnerDistanceToPlayer = player.transform.position.x - this.transform.position.x;
         float aliveDistanceToPlayer = player.transform.position.x - alive.transform.position.x;
 
+        float halfScreenWidth = player.GetComponent<PlayerController2D>().halfScreenWidth;
+
         if (alive.activeSelf == false) // Is alive currently despawned?
         {
-            if ((spawnerDistanceToPlayer >= -18) && (spawnerDistanceToPlayer <= 18) && !spawnedOnce)
+            if ((spawnerDistanceToPlayer >= -halfScreenWidth) && (spawnerDistanceToPlayer <= halfScreenWidth) && !spawnedOnce)
             {
-                Debug.Log("Player close, RESPAWN");
                 //Player is close enough, spawn enemy!
                 RespawnEnemy();
                 spawnedOnce = true;
             }
-            else if ((spawnerDistanceToPlayer < -18) || (spawnerDistanceToPlayer > 18))
+            else if ((spawnerDistanceToPlayer < -halfScreenWidth) || (spawnerDistanceToPlayer > halfScreenWidth))
             {
-                Debug.Log("Player far enough, enemy dead, can put spawnedOnce back to false");
                 spawnedOnce = false;
             }
             else
@@ -165,9 +176,8 @@ public class EnemyController : MonoBehaviour
         else //Alive is active, do not respawn when close enough, but instead if far enough from ALIVE, despawn it.
         {
 
-            if ((aliveDistanceToPlayer < -18) || (aliveDistanceToPlayer > 18))
+            if ((aliveDistanceToPlayer < -halfScreenWidth) || (aliveDistanceToPlayer > halfScreenWidth))
             {
-                Debug.Log("Player far enough, despawn!");
                 DespawnEnemy();
             }
         }
@@ -230,7 +240,6 @@ public class EnemyController : MonoBehaviour
         aliveNew.transform.position = this.transform.position;
         alive = aliveNew;*/
 
-        Debug.Log("Respawned!");
         alive.transform.position = this.transform.position;
         currentHealth = maxHealth;
         alive.gameObject.SetActive(true);
@@ -408,6 +417,41 @@ public class EnemyController : MonoBehaviour
             case EnemyType.bird:
                 break;
             case EnemyType.hotdog:
+
+                if(hotdogIsWaiting) //Wait, then after time runs out, start shooting
+                {
+                    hotdogWaitTimer -= Time.deltaTime;
+                    if(hotdogWaitTimer < 0 )
+                    {
+                        hotdogIsWaiting = false;
+                        hotdogShootTimer = hotdogShootTimerMax;
+                        hotdogShootCounter = hotdogShootCounterMax;
+                    }
+                }
+                else
+                {
+                    hotdogShootTimer -= Time.deltaTime;
+                    if ((hotdogShootTimer < 0) && hotdogShootCounter > 0) //Shoot, reset timer
+                    {
+                        
+                        hotdogShootTimer = hotdogShootTimerMax;
+                        hotdogShootCounter -= 1;
+
+                        GameObject bullet = Instantiate(bulletList[0]); //This is fire
+                        bullet.transform.parent = this.transform;
+                        bullet.transform.position = alive.transform.position;
+                        bullet.GetComponent<EnemyBulletScript>().Shoot(player.transform.position);
+
+                        //bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
+                    }
+                    else if(hotdogShootCounter <= 0)
+                    {
+                        hotdogWaitTimer = hotdogWaitTimerMax;
+                        hotdogIsWaiting = true;
+                    }
+                }
+                
+
                 break;
             case EnemyType.rooster:
                 break;
@@ -652,7 +696,6 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyType.bat:
 
-                    Debug.Log("Player hit!");
                     batIsFleeing = true;
                     float fleeDist = Random.Range(10f, 15f);
                     batFleePos = new Vector3(alive.transform.position.x, alive.transform.position.y + fleeDist, alive.transform.position.z);
@@ -703,7 +746,6 @@ public class EnemyController : MonoBehaviour
     void DespawnEnemy()
     {
         // Destroy(alive.gameObject);
-        Debug.Log("Despawned");
         alive.gameObject.SetActive(false);
     }
 

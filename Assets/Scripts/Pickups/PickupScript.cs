@@ -6,6 +6,7 @@ public class PickupScript : MonoBehaviour
 {
     public Type itemType;
     public int healthIncrease;
+    GameObject player;
 
     public LayerMask ignoreLayers;
 
@@ -19,7 +20,26 @@ public class PickupScript : MonoBehaviour
     }
     private void Awake()
     {
-        
+        player = GameObject.Find("Player");
+    }
+    public void CheckPlayerDistance()
+    {
+        //18 Is current half of screen size width, change if screensize changes
+
+        //Player far enough, go far
+        float distanceToPlayer = player.transform.position.x - this.transform.position.x;
+        float halfScreenWidth = player.GetComponent<PlayerController2D>().halfScreenWidth;
+
+        if ((distanceToPlayer < -halfScreenWidth) || (distanceToPlayer > halfScreenWidth))
+        {
+            Destroy(transform.gameObject);
+        }
+
+        if(player.GetComponent<PlayerController2D>().currentState == PlayerController2D.State.Respawning)
+        {
+            Destroy(transform.gameObject);
+        }
+
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -54,6 +74,6 @@ public class PickupScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckPlayerDistance();
     }
 }

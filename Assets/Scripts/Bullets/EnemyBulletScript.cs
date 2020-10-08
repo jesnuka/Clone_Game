@@ -15,6 +15,17 @@ public class EnemyBulletScript : MonoBehaviour
 
     Vector3 targetDirection;
 
+    public BulletType bulletType;
+
+    float fireCurveCounter;
+    //float fireCurveCounterMax;
+
+    public enum BulletType
+    {
+        bullet,
+        fire
+    }
+
     private void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -42,7 +53,29 @@ public class EnemyBulletScript : MonoBehaviour
 
     void UpdatePosition()
     {
-        transform.position += (targetDirection * speed ) * Time.deltaTime;
+        if (bulletType == BulletType.fire)
+        {
+            fireCurveCounter += Time.deltaTime * 2;
+            //transform.position += (targetDirection * speed) * Time.deltaTime;
+            //rb2d.AddForce(-transform.right * 2f, ForceMode2D.Force);
+            //rb2d.AddForce(Vector3.up * 20f * 10);
+            //rb2d.velocity = new Vector2(0, 2000f);
+
+            // rb2d.velocity = new Vector3(speed * -1, rb2d.velocity.y, 0);
+            
+            transform.position += new Vector3(0f, (fireCurveCounter * 5) * Time.deltaTime, 0f);
+            transform.position += new Vector3((-1 * speed) * Time.deltaTime, 0f, 0f);
+        }
+        else
+        {
+            transform.position += (targetDirection * speed) * Time.deltaTime;
+        }
+       
+    }
+
+    void FireArc()
+    {
+
     }
 
     public void Shoot(Vector3 direction)
@@ -59,7 +92,17 @@ public class EnemyBulletScript : MonoBehaviour
         */
 
         // this.transform.position = direction;
-        targetDirection = (direction - transform.position).normalized;
+       
+
+        if(bulletType == BulletType.fire)
+        {
+            targetDirection = (direction - transform.position).normalized;
+            fireCurveCounter = -1.2f;
+        }
+        else
+        {
+            targetDirection = (direction - transform.position).normalized;
+        }
       //  targetDirection.z = 0;
       //  targetDirection.Normalize();
        // Debug.Log("TargetPos is " + targetDirection);

@@ -12,6 +12,8 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField]
     SoundManager soundManager;
 
+    public float halfScreenWidth;
+
     [SerializeField]
     GameObject blackoutUI;
 
@@ -408,7 +410,6 @@ public class PlayerController2D : MonoBehaviour
                     }
                     else if(currentState == State.Falling || (currentState == State.Normal && !isGrounded))
                     {
-                        Debug.Log("Pew");
                         playerAnimator.Play("Player_FallShoot");
                         animationDelayTime = animationDelayTimeMax;
                     }
@@ -511,7 +512,11 @@ public class PlayerController2D : MonoBehaviour
         {
             EnemyBulletScript enemyBullet = other.attachedRigidbody.GetComponent<EnemyBulletScript>();
             RemoveHealth(enemyBullet.damage);
-            Destroy(other.transform.gameObject);
+            if(enemyBullet.bulletType != EnemyBulletScript.BulletType.fire)
+            {
+                Destroy(other.transform.gameObject);
+            }
+            
         }
     }
 
