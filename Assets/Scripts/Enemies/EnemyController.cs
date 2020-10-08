@@ -288,14 +288,14 @@ public class EnemyController : MonoBehaviour
                 {
                     facingDirection = 1;
                   //  alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
-                    spriteRenderer.flipX = false;
+                    spriteRenderer.flipX = true;
 
                 }
                 else //Player is on the left side
                 {
                     facingDirection = -1;
                  //   alive.transform.rotation = new Quaternion(alive.transform.rotation.x, -180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
-                    spriteRenderer.flipX = true;
+                    spriteRenderer.flipX = false;
                 }
 
                 if (bunnyIsWaiting) //Pause between movements

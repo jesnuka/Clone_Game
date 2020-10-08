@@ -376,7 +376,6 @@ public class PlayerController2D : MonoBehaviour
             else
             {
                 //Already have max health
-                Debug.Log("Already Full HP");
             }
         }
     }

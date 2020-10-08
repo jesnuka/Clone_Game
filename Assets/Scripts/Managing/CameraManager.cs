@@ -17,13 +17,13 @@ public class CameraManager : MonoBehaviour
 
 
     //Transform transitionBegin;
-    Transform transitionTarget;
+    Vector3 transitionTarget;
 
     //Use this when calling TransitionCamera function
     //It will select the specific begin and end transitions from the list
     //They need to be manually placed there currently and kept track of though
     public int transitionIndex;
-
+    Vector3 stageDimensions;
 
     public Mode currentMode;
 
@@ -37,7 +37,7 @@ public class CameraManager : MonoBehaviour
     private void Awake()
     {
         currentMode = Mode.Follow;
-
+        stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
         playerObject = GameObject.FindWithTag("Player");
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController2D>();
 
@@ -69,19 +69,28 @@ public class CameraManager : MonoBehaviour
     
     public void TransitionLeft()
     {
-
+        transitionIndex = 0;
+        currentMode = Mode.Transition;
+        transitionTarget = new Vector3(transform.position.x - stageDimensions.x, transform.position.y, transform.position.z);
     }
     public void TransitionRight()
     {
-
+        transitionIndex = 1;
+        currentMode = Mode.Transition;
+        //transitionTarget = new Vector3(transform.position.x + Camera.main.pixelWidth, transform.position.y, 0f);
+        transitionTarget = new Vector3(transform.position.x + stageDimensions.x, transform.position.y, transform.position.z);
     }
     public void TransitionUp()
     {
-
+        transitionIndex = 2;
+        currentMode = Mode.Transition;
+        transitionTarget = new Vector3(transform.position.x, transform.position.y + stageDimensions.y, transform.position.z);
     }
     public void TransitionDown()
     {
-
+        transitionIndex = 3;
+        currentMode = Mode.Transition;
+        transitionTarget = new Vector3(transform.position.x, transform.position.y - stageDimensions.y, transform.position.z);
     }
 
     public void TransitionCamera(int i) //The value i is the direction. 0 = left, 1 = right, 2 = up, 3 = down
@@ -89,13 +98,13 @@ public class CameraManager : MonoBehaviour
         if (currentMode == Mode.Transition)
         {
             cameraMoveTime += Time.deltaTime * cameraMoveSpeed;
-            transform.position = Vector3.Lerp(this.transform.position, transitionTarget.position, cameraMoveTime);
+            transform.position = Vector3.Lerp(this.transform.position, transitionTarget, cameraMoveTime);
         }
 
         if (cameraMoveTime >= 1)
         {
             currentMode = Mode.Stationary;
-            transform.position = transitionTarget.position;
+            transform.position = transitionTarget;
         }
     }
 
