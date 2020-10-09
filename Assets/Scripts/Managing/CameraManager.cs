@@ -77,6 +77,9 @@ public class CameraManager : MonoBehaviour
         
         switch (followAreaValue)
         {
+            case 0: //Testing only, follows everywhere
+                this.transform.position = new Vector3(playerObject.transform.position.x, playerObject.transform.position.y, transform.position.z);
+                break;
             case 1:
                 this.transform.position = new Vector3(Mathf.Clamp(playerObject.transform.position.x, followLimitX1L, followLimitX1R), this.transform.position.y, this.transform.position.z);
                 break;
