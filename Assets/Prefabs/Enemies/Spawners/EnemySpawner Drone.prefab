@@ -4820,7 +4820,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -9645,7 +9645,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -14457,7 +14457,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -14528,6 +14528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a66ec4967cfa84b90492b8d105ba0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
   player: {fileID: 0}
   dropItemsList:
   - {fileID: 5740047203637637813, guid: e562889855e0f784ab58011372147f42, type: 3}
@@ -14539,8 +14540,8 @@ MonoBehaviour:
   moveParticles: {fileID: 795930953821866194}
   maxHealth: 1
   currentHealth: 0
-  maxSpeed: 0.0115
-  currentSpeed: 0.0115
+  maxSpeed: 0.015
+  currentSpeed: 0.02
   damage: 3
   currentState: 1
   enemyType: 1
@@ -14558,6 +14559,12 @@ MonoBehaviour:
   bunnyShootTimerMax: 0
   bunnyShootCounter: 0
   bunnyShootCounterMax: 0
+  hotdogWaitTimer: 0
+  hotdogWaitTimerMax: 0
+  hotdogShootTimer: 0
+  hotdogShootTimerMax: 0
+  hotdogShootCounter: 0
+  hotdogShootCounterMax: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 1906623093085209974}

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
     Rigidbody2D aliveRb2d;
     Animator aliveAnimator;
     Collider2D aliveCollider2d;
@@ -139,6 +139,7 @@ public class EnemyController : MonoBehaviour
         currentState = State.Moving;
         currentHealth = maxHealth;
         player = GameObject.Find("Player");
+        
 
         //Despawn, once player is in area, spawn them again
         DespawnEnemy();
@@ -199,6 +200,7 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         alive = transform.Find("Alive").gameObject;
+        spriteRenderer = alive.transform.GetChild(3).gameObject.GetComponent<SpriteRenderer>();
         facingDirection = 1;
     }
     private void Update()
@@ -287,15 +289,15 @@ public class EnemyController : MonoBehaviour
                 if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
                 {
                     facingDirection = 1;
-                  //  alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
-                    spriteRenderer.flipX = false;
+                   // alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = true;
 
                 }
                 else //Player is on the left side
                 {
                     facingDirection = -1;
-                 //   alive.transform.rotation = new Quaternion(alive.transform.rotation.x, -180.0f, alive.transform.rotation.z, alive.transform.rotation.w);
-                    spriteRenderer.flipX = true;
+                    //alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = false;
                 }
 
                 if (bunnyIsWaiting) //Pause between movements
@@ -364,12 +366,14 @@ public class EnemyController : MonoBehaviour
                 if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
                 {
                     facingDirection = 1;
+                    alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
                     spriteRenderer.flipX = false;
 
                 }
                 else //Player is on the left side
                 {
                     facingDirection = -1;
+                    alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
                     spriteRenderer.flipX = true;
                 }
 
@@ -405,10 +409,10 @@ public class EnemyController : MonoBehaviour
                         //Sees player
                     }
 
-                   /* if (distanceToPlayer < 1) // This was moved to TouchedPlayer() function, which is called from EnemyCollisionChecker
+                    if (distanceToPlayer < 1) // If player is invincible, bat does NOT fly off in MM2
                     {
-                       
-                    }*/
+                      //  TouchedPlayer();
+                    }
                 }
 
                 break;
@@ -725,6 +729,8 @@ public class EnemyController : MonoBehaviour
             if (tempValue <= 0)
             {
                 //Die
+                hurtParticles.Play();
+                soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
                 currentHealth = 0;
                 currentState = State.Dead;
             }
@@ -756,27 +762,28 @@ public class EnemyController : MonoBehaviour
             //RandomNum can be removed, if items are later chosen depending on dropChance
           //  int randomNum = Random.Range(0, dropItemsList.Length);
             float dropChance = Random.Range(0.0f, 100f);
-
+            //Debug.Log("Dropchance: " + dropChance);
 
             //With more items, add more to list. If specific items should have different drop chance, add if- here, and choose from list [n]
 
 
-            
-            if ((dropChance > 50f) && (dropChance <= 75f)) //Large health pickup
+
+            if ((dropChance > 87.5f) && (dropChance <= 90f)) //Large health pickup
             {
+                
                 GameObject itemDrop = dropItemsList[1];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
                 // Destroy(alive.gameObject);
 
             }
-            else if ((dropChance > 0f) && (dropChance <= 40f)) //Small health pickup
+            else if ((dropChance > 90f) && (dropChance <= 99f)) //Small health pickup
             {
                 GameObject itemDrop = dropItemsList[0];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
                 //  Destroy(alive.gameObject);
 
             }
-            else if ((dropChance > 75f) && (dropChance <= 77.5f)) //Life pickup
+            else if ((dropChance > 99f) && (dropChance < 100f)) //Life pickup
             {
                 GameObject itemDrop = dropItemsList[2];
                 Instantiate(itemDrop, alive.transform.position, alive.transform.rotation);
