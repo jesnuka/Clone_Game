@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sewer_FrontTile
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 1eeb3aace4e00f7479f8cb3211d1a533, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9716981, g: 0.9279767, b: 0.85711104, a: 1}
   m_Transform:
     e00: 1
     e01: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sewer_FloorB
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: cd63641cf82e4814ab86de3b8edbeefc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9716981, g: 0.9279767, b: 0.85711104, a: 1}
   m_Transform:
     e00: 1
     e01: 0
