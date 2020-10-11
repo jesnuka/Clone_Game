@@ -29,5 +29,5 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats: []
     m_Colors:
-    - Color_C13AA74B: {r: 0.25684127, g: 2.0166795, b: 1.8419439, a: 0}
+    - Color_C13AA74B: {r: 0.25684127, g: 2.0166795, b: 1.8419439, a: 0.6156863}
   m_BuildTextureStacks: []

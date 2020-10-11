@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sewer_WaterB_0
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 3458206018394811673, guid: 8f9c92f709d049e45b2692e5dcd32f08, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5372549}
   m_Transform:
     e00: 1
     e01: 0
