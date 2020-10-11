@@ -984,8 +984,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraMoveTime: 0
+  cameraMoveTimeMax: 0
   cameraMoveSpeed: 0.1
   currentTransform: {fileID: 0}
+  followAreaValue: 0
+  followLimitX1L: 0
+  followLimitX1R: 0
+  followLimitX2L: 0
+  followLimitX2R: 0
+  followLimitX3L: 0
+  followLimitX3R: 0
   transitionIndex: 0
   currentMode: 0
 --- !u!1 &197614836
@@ -5199,18 +5207,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8377331185928225914, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8377331186445273773, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1093801085
-      objectReference: {fileID: 0}
-    - target: {fileID: 8377331186445273773, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
       propertyPath: soundManager
       value: 
@@ -5223,10 +5219,6 @@ PrefabInstance:
       propertyPath: gameOverUI
       value: 
       objectReference: {fileID: 492196788}
-    - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: halfScreenWidth
-      value: 13.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8377331186771214312, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
       propertyPath: currentCheckpoint
       value: 
@@ -5278,22 +5270,6 @@ PrefabInstance:
     - target: {fileID: 8377331186771214319, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8377331187174364946, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8377331187343008980, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8377331187363773631, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8377331187545907366, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce9b1beff5b2c5346b4a5fe72011886e, type: 3}

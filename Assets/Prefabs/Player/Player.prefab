@@ -177,8 +177,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1093801085
+  m_SortingLayer: 1
   m_SortingOrder: 3
   m_Sprite: {fileID: -1091814872999719284, guid: 26fdbb04270527243a161c8c921536f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -261,7 +261,7 @@ MonoBehaviour:
   playerAnimator: {fileID: 8377331186445273762}
   spriteRenderer: {fileID: 8377331186445273773}
   soundManager: {fileID: 0}
-  halfScreenWidth: 18
+  halfScreenWidth: 13.5
   blackoutUI: {fileID: 0}
   healthBarBlock: {fileID: 21300000, guid: 9f7ef841a2df513448b02d9309194361, type: 3}
   healthBarEmpty: {fileID: 21300000, guid: 4f11eb3443e3f394ab67d0d836e90cad, type: 3}
@@ -5196,7 +5196,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -10021,7 +10021,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -10102,6 +10102,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HurtParticles
       objectReference: {fileID: 0}
+    - target: {fileID: 7629207630640977986, guid: 13087c200ad64f34aabf31776d705344, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13087c200ad64f34aabf31776d705344, type: 3}
 --- !u!198 &8377331185928226181 stripped
@@ -10121,6 +10125,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8377331185997918150}
     m_Modifications:
+    - target: {fileID: 5211601361092271873, guid: deb51b37ad1400c49bad9acf53269367, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5211601361092271875, guid: deb51b37ad1400c49bad9acf53269367, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10231,6 +10239,10 @@ PrefabInstance:
     - target: {fileID: 2461919147111813436, guid: 16aac626c6d174540b8acb04d3bee529, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2461919147111813437, guid: 16aac626c6d174540b8acb04d3bee529, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2461919147111813439, guid: 16aac626c6d174540b8acb04d3bee529, type: 3}
       propertyPath: m_Name
