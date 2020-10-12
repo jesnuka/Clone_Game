@@ -37,6 +37,7 @@ public class LadderCollisionListener : MonoBehaviour
         {
             touchingPlayer = true;
             ladderMain.playerIsColliding = true;
+          //  player.isOnLadder = true;
         }
 
     }
@@ -46,6 +47,7 @@ public class LadderCollisionListener : MonoBehaviour
         {
             touchingPlayer = false;
             ladderMain.playerIsColliding = false;
+           // player.isOnLadder = false;
         }
             
     }

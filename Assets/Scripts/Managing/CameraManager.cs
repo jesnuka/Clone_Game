@@ -89,6 +89,10 @@ public class CameraManager : MonoBehaviour
             case 3:
                 this.transform.position = new Vector3(Mathf.Clamp(playerObject.transform.position.x, followLimitX3L, followLimitX3R), this.transform.position.y, this.transform.position.z);
                 break;
+            case 4:
+                //Don't follow this time
+                break;
+
 
         }
        
@@ -103,49 +107,53 @@ public class CameraManager : MonoBehaviour
     }
 
     
-    public void TransitionLeft(bool followValue)
+    public void TransitionLeft(bool followValue, float amount)
     {
         cameraMoveTime = 0;
         transitionIndex = 0;
         currentMode = Mode.Transition;
-        transitionTarget = new Vector3(transform.position.x - stageDimensions.x, transform.position.y, transform.position.z);
+        transitionTarget = new Vector3(transform.position.x - stageDimensions.x * amount, transform.position.y , transform.position.z);
+        playerController.PushPlayer(0);
         if(followValue)
         {
             Debug.Log("follow? "+ followValue);
             followsAfter = true;
         }
     }
-    public void TransitionRight(bool followValue)
+    public void TransitionRight(bool followValue, float amount)
     {
         cameraMoveTime = 0;
         transitionIndex = 1;
         currentMode = Mode.Transition;
         //transitionTarget = new Vector3(transform.position.x + Camera.main.pixelWidth, transform.position.y, 0f);
-        transitionTarget = new Vector3(transform.position.x + stageDimensions.x, transform.position.y, transform.position.z);
+        transitionTarget = new Vector3(transform.position.x + stageDimensions.x * amount, transform.position.y, transform.position.z);
+        playerController.PushPlayer(1);
         if (followValue)
         {
             Debug.Log("follow? " + followValue);
             followsAfter = true;
         }
     }
-    public void TransitionUp(bool followValue)
+    public void TransitionUp(bool followValue, float amount)
     {
         cameraMoveTime = 0;
         transitionIndex = 2;
         currentMode = Mode.Transition;
-        transitionTarget = new Vector3(transform.position.x, transform.position.y + stageDimensions.y, transform.position.z);
+        transitionTarget = new Vector3(transform.position.x, transform.position.y + stageDimensions.y * amount, transform.position.z);
+        playerController.PushPlayer(2);
         if (followValue)
         {
             Debug.Log("follow? " + followsAfter);
             followsAfter = true;
         }
     }
-    public void TransitionDown(bool followValue)
+    public void TransitionDown(bool followValue, float amount)
     {
         cameraMoveTime = 0;
         transitionIndex = 3;
         currentMode = Mode.Transition;
-        transitionTarget = new Vector3(transform.position.x, transform.position.y - stageDimensions.y, transform.position.z);
+        transitionTarget = new Vector3(transform.position.x, transform.position.y - stageDimensions.y * amount, transform.position.z);
+        playerController.PushPlayer(3);
         if (followValue)
         {
             Debug.Log("follow? " + followValue);
@@ -187,10 +195,12 @@ public class CameraManager : MonoBehaviour
 
             case Mode.Stationary:
                 currentMode = Mode.Stationary;
+                followAreaValue = 4;
                 break;
 
             case Mode.Transition:
                 currentMode = Mode.Transition;
+                followAreaValue = 4;
                 break;
         }
     }

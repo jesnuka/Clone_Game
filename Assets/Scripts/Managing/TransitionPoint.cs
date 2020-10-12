@@ -6,6 +6,7 @@ public class TransitionPoint : MonoBehaviour
 {
     public CameraManager cameraManager;
     public Direction transitionDirection;
+    public float amount;
 
     public bool isOneShot;
     public bool followsAfter;
@@ -32,19 +33,19 @@ public class TransitionPoint : MonoBehaviour
             switch (transitionDirection)
             {
                 case Direction.left:
-                    cameraManager.TransitionLeft(followsAfter);
+                    cameraManager.TransitionLeft(followsAfter, amount);
                     transitionDirection = Direction.right;
                     break;
                 case Direction.right:
-                    cameraManager.TransitionRight(followsAfter);
+                    cameraManager.TransitionRight(followsAfter, amount);
                     transitionDirection = Direction.left;
                     break;
                 case Direction.up:
-                    cameraManager.TransitionUp(followsAfter);
+                    cameraManager.TransitionUp(followsAfter, amount);
                     transitionDirection = Direction.down;
                     break;
                 case Direction.down:
-                    cameraManager.TransitionDown(followsAfter);
+                    cameraManager.TransitionDown(followsAfter, amount);
                     transitionDirection = Direction.up;
                     break;
             }

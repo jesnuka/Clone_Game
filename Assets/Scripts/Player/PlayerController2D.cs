@@ -116,6 +116,11 @@ public class PlayerController2D : MonoBehaviour
 
     public State currentState;
     public bool isInvincible;
+    public bool isOnLadder;
+
+    public float pushTimer;
+    public float pushTimerMax;
+    public bool isPushed;
 
     public enum State
     {
@@ -181,50 +186,60 @@ public class PlayerController2D : MonoBehaviour
         if(!gameIsOver)
         {
             animationDelayTime -= Time.deltaTime;
-            isGrounded = IsGrounded();
-            SlopeCheck();
-            if (currentState == State.Dead)
-            {
-                //  Debug.Log("GG");
-                GameOver();
-            }
-            else if (currentState == State.Normal)
-            {
-               // Debug.Log("Moving");
-                MovePlayer();
-            }
-            else if(currentState == State.Climbing)
-            {
-               // Debug.Log("Climbing");
-                ClimbPlayer();
-            }
 
-            else if (currentState == State.Knockback)
+            if(pushTimer > 0)
             {
-                // Debug.Log("Knockback");
-                knockbackTime -= Time.deltaTime;
-                KnockbackPlayer(knockbackDirection);
+                currentState = State.Normal;
+                playerAnimator.Play("Player_Idle");
+                pushTimer -= Time.deltaTime;
             }
-            else if (currentState == State.Respawning)
+            else
             {
-                // Debug.Log("Respawning");
-                // knockbackTime -= Time.deltaTime;
-                rb2d.velocity = Vector3.zero;
-                RespawnPlayer();
-            }
             
-            if (isInvincible)
-            {
-                // Debug.Log("Invincible");
-                invincibilityTime-= Time.deltaTime;
-                InvincibilityFrames();
-            }
+                isGrounded = IsGrounded();
+                SlopeCheck();
+                if (currentState == State.Dead)
+                {
+                    //  Debug.Log("GG");
+                    GameOver();
+                }
+                else if (currentState == State.Normal)
+                {
+                   // Debug.Log("Moving");
+                    MovePlayer();
+                }
+                else if(currentState == State.Climbing)
+                {
+                   // Debug.Log("Climbing");
+                    ClimbPlayer();
+                }
 
-            else if(currentState == State.Falling)
-            {
-                FallPlayer();
-            }
+                else if (currentState == State.Knockback)
+                {
+                    // Debug.Log("Knockback");
+                    knockbackTime -= Time.deltaTime;
+                    KnockbackPlayer(knockbackDirection);
+                }
+                else if (currentState == State.Respawning)
+                {
+                    // Debug.Log("Respawning");
+                    // knockbackTime -= Time.deltaTime;
+                    rb2d.velocity = Vector3.zero;
+                    RespawnPlayer();
+                }
             
+                if (isInvincible)
+                {
+                    // Debug.Log("Invincible");
+                    invincibilityTime-= Time.deltaTime;
+                    InvincibilityFrames();
+                }
+
+                else if(currentState == State.Falling)
+                {
+                    FallPlayer();
+                }
+            }
         }
         
     }
@@ -480,12 +495,40 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    public void PushPlayer(int dir) //Dir is the direction. 0 = left, 1 = right, 2 = up, 3 = down
+    {
+        switch (dir)
+        {
+            case 0:
+                pushTimer = pushTimerMax;
+                currentState = State.Normal;
+                rb2d.velocity = new Vector2(rb2d.velocity.x - 0.25f, rb2d.velocity.y);
+                break;
+            case 1:
+                pushTimer = pushTimerMax;
+                currentState = State.Normal;
+                rb2d.velocity = new Vector2(rb2d.velocity.x + 0.25f, rb2d.velocity.y);
+                break;
+            case 2:
+                pushTimer = pushTimerMax;
+                currentState = State.Normal;
+                rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y + 5f);
+                break;
+            case 3:
+                pushTimer = pushTimerMax;
+                currentState = State.Normal;
+                rb2d.velocity = new Vector2(rb2d.velocity.x, rb2d.velocity.y - 5f);
+                break;
+        }
+       
+    }
+
     bool IsGrounded()
     {
         //Check if the player is grounded
         Vector3 boxSize = new Vector3(boxCollider2d.bounds.size.x - groundCheckWidthDifference, boxCollider2d.bounds.size.y, boxCollider2d.bounds.size.z);
         RaycastHit2D raycastHit;
-        if(currentState != State.Climbing)
+        if((currentState != State.Climbing)) //&& !isOnLadder)
         {
             raycastHit = Physics2D.BoxCast(boxCollider2d.bounds.center, boxSize, 0f, Vector2.down, groundCheckDistance, groundLayersWithLadder);
         }
@@ -499,9 +542,9 @@ public class PlayerController2D : MonoBehaviour
         else rayColor = Color.red;
         
         //Debug ray drawing
-        Debug.DrawRay(boxCollider2d.bounds.center + new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + groundCheckDistance), rayColor);
-        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + groundCheckDistance), rayColor);
-        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(0, boxCollider2d.bounds.extents.y), Vector2.right * (boxCollider2d.bounds.extents.x), rayColor);
+       // Debug.DrawRay(boxCollider2d.bounds.center + new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + groundCheckDistance), rayColor);
+     //   Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x - groundCheckWidthDifference, 0), Vector2.down * (boxCollider2d.bounds.extents.y + groundCheckDistance), rayColor);
+       // Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(0, boxCollider2d.bounds.extents.y), Vector2.right * (boxCollider2d.bounds.extents.x), rayColor);
         return raycastHit.collider != null;
     }
     private void OnCollisionEnter2D(Collision2D collision)
