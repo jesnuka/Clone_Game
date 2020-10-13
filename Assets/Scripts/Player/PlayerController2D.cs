@@ -313,6 +313,8 @@ public class PlayerController2D : MonoBehaviour
         gameOverTimer -= Time.deltaTime;
         if(gameOverTimer < 0 )
         {
+            Debug.Log("Respawning player!");
+            currentCheckpoint.GetComponent<CheckpointScript>().ResetThings();
             blackoutUI.SetActive(false);
             playerHealthCurrent = playerHealthMax;
             transform.position = currentCheckpoint.transform.position;
@@ -505,12 +507,12 @@ public class PlayerController2D : MonoBehaviour
             case 0:
                 pushTimer = pushTimerMax;
                 currentState = State.Normal;
-                rb2d.velocity = new Vector2(rb2d.velocity.x - 0.25f, rb2d.velocity.y + 0.1f);
+                rb2d.velocity = new Vector2(rb2d.velocity.x - 0.6f, rb2d.velocity.y + 0.5f);
                 break;
             case 1:
                 pushTimer = pushTimerMax;
                 currentState = State.Normal;
-                rb2d.velocity = new Vector2(rb2d.velocity.x + 0.25f, rb2d.velocity.y+ 0.1f);
+                rb2d.velocity = new Vector2(rb2d.velocity.x + 0.6f, rb2d.velocity.y+ 0.5f);
                 break;
             case 2:
                 pushTimer = pushTimerMax;

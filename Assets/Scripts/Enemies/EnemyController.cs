@@ -49,8 +49,8 @@ public class EnemyController : MonoBehaviour
     // -- Bat related starts
     public float batSleepTimer;
     public float batSleepTimerMax;
-    bool batIsSleeping;
-    bool batIsFleeing;
+    public bool batIsSleeping;
+    public bool batIsFleeing;
     Vector3 batFleePos;
     // -- Bat related ends
 
@@ -148,8 +148,9 @@ public class EnemyController : MonoBehaviour
         
         if(enemyType == EnemyType.bat)
         {
-            batIsFleeing = true;
-            batSleepTimer = batSleepTimerMax;
+            batIsSleeping = true;
+            float rand = Random.Range(1, batSleepTimerMax);
+            batSleepTimer = rand;
         }
         //Despawn, once player is in area, spawn them again
         DespawnEnemy();
@@ -178,11 +179,27 @@ public class EnemyController : MonoBehaviour
                 if ((spawnerDistanceToPlayerX >= -halfScreenWidth) && (spawnerDistanceToPlayerX <= halfScreenWidth) && (spawnerDistanceToPlayerY >= -halfScreenHeight) && (spawnerDistanceToPlayerY <= halfScreenHeight) && !spawnedOnce)
                 {
                     //Player is close enough, spawn enemy!
-                    RespawnEnemy();
-                    spawnedOnce = true;
+                    if(enemyType == EnemyType.hotdog)
+                    {
+                        if(hotDogSpawnAmount > 0)
+                        {
+                            RespawnEnemy();
+                            spawnedOnce = true;
+                        }
+                        else
+                        {
+                            //Dont
+                        }
+                    }
+                    else
+                    {
+                        RespawnEnemy();
+                        spawnedOnce = true;
+                    }
+                    
                 
                 }
-                else if (((spawnerDistanceToPlayerX < -halfScreenWidth) || (spawnerDistanceToPlayerX > halfScreenWidth)) && ((spawnerDistanceToPlayerY < -halfScreenHeight) || (spawnerDistanceToPlayerY > halfScreenHeight)))
+                else if (((spawnerDistanceToPlayerX < -halfScreenWidth) || (spawnerDistanceToPlayerX > halfScreenWidth))) //&& ((spawnerDistanceToPlayerY < -halfScreenHeight) || (spawnerDistanceToPlayerY > halfScreenHeight)))
                 {
                     spawnedOnce = false;
                 }
@@ -191,14 +208,28 @@ public class EnemyController : MonoBehaviour
             {
                 if(spawnAreaActive && !spawnedOnce)
                 {
-                  //  Debug.Log("Spawn!! and once is "+spawnedOnce + " and is active?!?!? + " +alive.activeSelf);
-                    RespawnEnemy();
-                    spawnedOnce = true;
+                    //  Debug.Log("Spawn!! and once is "+spawnedOnce + " and is active?!?!? + " +alive.activeSelf);
+                    if (enemyType == EnemyType.hotdog)
+                    {
+                        if (hotDogSpawnAmount > 0)
+                        {
+                            RespawnEnemy();
+                            spawnedOnce = true;
+                        }
+                        else
+                        {
+                            //Dont
+                        }
+                    }
+                    else
+                    {
+                        RespawnEnemy();
+                        spawnedOnce = true;
+                    }
                 }
                 else if (!spawnAreaActive)
                 {
                    // Debug.Log("ELIF Spawn!! and once is " + spawnedOnce + " and is active?!?!? + " + alive.activeSelf);
-                   // Debug.Log("Spawnedonce false");
                     spawnedOnce = false;
                 }
             }
@@ -223,7 +254,7 @@ public class EnemyController : MonoBehaviour
         {
             if (mainCamera.gameObject.GetComponent<CameraManager>().currentMode == CameraManager.Mode.Follow) //Use certain width and height when follow camera on, otherwise screensize is the same constantly
             {
-                if (((aliveDistanceToPlayerX < -halfScreenWidth) || (aliveDistanceToPlayerX > halfScreenWidth)) && ((aliveDistanceToPlayerY < -halfScreenHeight ) || (aliveDistanceToPlayerY > halfScreenHeight)))
+                if (((aliveDistanceToPlayerX < -halfScreenWidth) || (aliveDistanceToPlayerX > halfScreenWidth))) //&& ((aliveDistanceToPlayerY < -halfScreenHeight ) || (aliveDistanceToPlayerY > halfScreenHeight)))
                 {
                     DespawnEnemy();
                 }
@@ -232,7 +263,6 @@ public class EnemyController : MonoBehaviour
             {
                 if(!spawnAreaActive)
                 {
-                    Debug.Log("despawn!");
                     DespawnEnemy();
                 }
             }
@@ -305,6 +335,12 @@ public class EnemyController : MonoBehaviour
         aliveNew.transform.parent = this.transform;
         aliveNew.transform.position = this.transform.position;
         alive = aliveNew;*/
+        if(enemyType == EnemyType.bat)
+        {
+            batIsSleeping = true;
+            float rand = Random.Range(1, batSleepTimerMax);
+            batSleepTimer = rand;
+        }
 
         alive.transform.position = this.transform.position;
         currentHealth = maxHealth;
@@ -449,7 +485,8 @@ public class EnemyController : MonoBehaviour
                         aliveRb2d.velocity = Vector3.zero;
                         batIsFleeing = false;
                         batIsSleeping = true;
-                        batSleepTimer = batSleepTimerMax;
+                        float rand = Random.Range(1, batSleepTimerMax);
+                        batSleepTimer = rand;
                         //Set sleep animation here
                     }
                 }
@@ -741,7 +778,8 @@ public class EnemyController : MonoBehaviour
                     aliveRb2d.velocity = Vector3.zero;
                     batIsFleeing = false;
                     batIsSleeping = true;
-                    batSleepTimer = batSleepTimerMax;
+                    float rand = Random.Range(1, batSleepTimerMax);
+                    batSleepTimer = rand;
                 }
                 
 

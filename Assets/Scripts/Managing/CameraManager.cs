@@ -6,6 +6,8 @@ public class CameraManager : MonoBehaviour
 {
     PlayerController2D playerController;
     GameObject playerObject;
+    public GameObject background;
+    public GameObject background2;
 
     [SerializeField]
     float cameraMoveTime;
@@ -30,6 +32,11 @@ public class CameraManager : MonoBehaviour
     public float followLimitX3L;
     public float followLimitX3R;
 
+
+    public Vector3 resetPos1;
+    public Vector3 resetPos2;
+    public Vector3 resetPos3;
+
     //Transform transitionBegin;
     Vector3 transitionTarget;
 
@@ -40,8 +47,12 @@ public class CameraManager : MonoBehaviour
     //They need to be manually placed there currently and kept track of though
     public int transitionIndex;
     public bool followNext;
-    
 
+    public float backgroundTimer;
+    public float backgroundTimerMax;
+    public bool backgroundToggleOn;
+
+    public Vector3 bossfightTransform;
 
     Vector3 stageDimensions;
 
@@ -65,14 +76,62 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+        if(backgroundToggleOn)
+        {
+            backgroundTimer -= Time.deltaTime;
+            ToggleBackground();
+        }
+        
         switch (currentMode)
         {
             case Mode.Follow:
                 FollowPlayer();
                 break;
         }
+
     }
 
+    public void ResetCamera(int checkId)
+    {
+        if(checkId == 0)
+        {
+            Debug.Log("CHECKPOINT 1");
+            transform.position = resetPos1;
+            background.SetActive(true);
+        }
+        else if (checkId == 1)
+        {
+            Debug.Log("CHECKPOINT 2");
+            transform.position = resetPos2;
+        }
+        else if (checkId == 2)
+        {
+            Debug.Log("CHECKPOINT 3");
+            transform.position = resetPos3;
+        }
+        else
+        {
+            Debug.Log("CHECKPOINT ??? ");
+        }
+    }
+
+    void ToggleBackground()
+    {
+        if(backgroundTimer < 0)
+        {
+            if (background.activeSelf)
+            {
+                background.SetActive(false);
+                background2.SetActive(false);
+                backgroundToggleOn = false;
+            }
+            else
+            {
+                background2.SetActive(true);
+                backgroundToggleOn = false;
+            }
+        }
+    }
     void FollowPlayer()
     {
         
@@ -132,8 +191,9 @@ public class CameraManager : MonoBehaviour
         {
             followsAfter = true;
         }
+
     }
-    public void TransitionUp(bool followValue, float amount)
+    public void TransitionUp(bool followValue, float amount, bool toggleBackground)
     {
         cameraMoveTime = 0;
         transitionIndex = 2;
@@ -145,8 +205,14 @@ public class CameraManager : MonoBehaviour
             Debug.Log("FollowAfter is true now in camera");
             followsAfter = true;
         }
+        if (toggleBackground)
+        {
+
+            backgroundToggleOn = true;
+            backgroundTimer = backgroundTimerMax;
+        }
     }
-    public void TransitionDown(bool followValue, float amount)
+    public void TransitionDown(bool followValue, float amount, bool toggleBackground)
     {
         cameraMoveTime = 0;
         transitionIndex = 3;
@@ -157,8 +223,23 @@ public class CameraManager : MonoBehaviour
         {
             followsAfter = true;
         }
+        if (toggleBackground)
+        {
+            backgroundToggleOn = true;
+            backgroundTimer = backgroundTimerMax;
+        }
     }
+    public void TransitionBoss(float amount)
+    {
+        cameraMoveTime = 0;
+        transitionIndex = 1;
+        currentMode = Mode.Transition;
+        //transitionTarget = new Vector3(transform.position.x + Camera.main.pixelWidth, transform.position.y, 0f);
+       // transitionTarget = new Vector3(transform.position.x + stageDimensions.x * amount, transform.position.y, transform.position.z);
+        transitionTarget = new Vector3(bossfightTransform.x, bossfightTransform.y, transform.position.z);
+        playerController.PushPlayer(1);
 
+    }
     public void TransitionCamera(int i) //The value i is the direction. 0 = left, 1 = right, 2 = up, 3 = down
     {
         if (currentMode == Mode.Transition)

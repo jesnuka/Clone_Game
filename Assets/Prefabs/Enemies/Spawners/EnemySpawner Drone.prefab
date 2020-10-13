@@ -14541,8 +14541,8 @@ MonoBehaviour:
   moveParticles: {fileID: 795930953821866194}
   maxHealth: 1
   currentHealth: 0
-  maxSpeed: 0.015
-  currentSpeed: 0.02
+  maxSpeed: 0.025
+  currentSpeed: 0.025
   damage: 3
   currentState: 1
   enemyType: 1
@@ -14552,6 +14552,8 @@ MonoBehaviour:
   bulletList: []
   batSleepTimer: 0
   batSleepTimerMax: 3
+  batIsSleeping: 0
+  batIsFleeing: 0
   bunnyWalkTimer: 0
   bunnyWalkTimerMax: 0
   bunnyWaitTimer: 0
@@ -14582,6 +14584,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 795930954527325248}
     m_Modifications:
+    - target: {fileID: 4111518059000598072, guid: c3353055e24239d4181b3d7992419722, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -492707183
+      objectReference: {fileID: 0}
+    - target: {fileID: 4111518059000598072, guid: c3353055e24239d4181b3d7992419722, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4579478144474601790, guid: c3353055e24239d4181b3d7992419722, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

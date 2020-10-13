@@ -9669,6 +9669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a66ec4967cfa84b90492b8d105ba0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   spriteRenderer: {fileID: 3960886628164629474}
   player: {fileID: 0}
   dropItemsList:
@@ -9707,6 +9708,8 @@ MonoBehaviour:
   hotdogShootTimerMax: 0
   hotdogShootCounter: 0
   hotdogShootCounterMax: 0
+  spawnAreaActive: 0
+  hotDogSpawnAmount: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 3402251517440583537}
@@ -14629,8 +14632,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5782108023686896462, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
+      propertyPath: m_SortingLayerID
+      value: -492707183
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782108023686896462, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e7e98a8cbf9f444d8240cedd0ce389f, type: 3}

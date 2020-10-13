@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a077bcc57f3567f4d8448fcff3b9fc86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyTimer: 4
+  destroyTimer: 3
   speed: 20
   damage: 1
   destroyOnWalls: 0

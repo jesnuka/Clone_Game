@@ -6,10 +6,74 @@ public class CheckpointScript : MonoBehaviour
 {
     public GameObject player;
     bool isActive;
+    public Camera mainCam;
+
+    public int checkpointId; //For what this checkpoint sets back active when player spawns here.
+    public GameObject[] activateableObstacles;
+    public GameObject[] activateableTransitions;
+    public EnemyController[] activateableEnemies; //For pipes, as they spawn only once
+
 
     private void Awake()
     {
         player = GameObject.Find("Player");
+        mainCam = Camera.main;
+    }
+
+    public void ResetObst()
+    {
+        foreach(GameObject obstacle in activateableObstacles)
+        {
+            obstacle.SetActive(false);
+        }
+    }
+    public void ResetPipes()
+    {
+        foreach(EnemyController enemy in activateableEnemies)
+        {
+            enemy.hotDogSpawnAmount = 1;
+        }
+    }
+
+    public void ResetTransitions()
+    {
+        foreach (GameObject transition in activateableTransitions)
+        {
+            transition.SetActive(true);
+        }
+    }
+
+    public void ResetCamera()
+    {
+       mainCam.gameObject.GetComponent<CameraManager>().ResetCamera(checkpointId);
+
+    }
+
+    public void ResetThings()
+    {
+        
+        if(checkpointId == 0)
+        {
+            Debug.Log("Resetting 0!");
+            ResetObst();
+            ResetPipes();
+            ResetTransitions();
+            ResetCamera();
+        }
+        else if (checkpointId == 1)
+        {
+            Debug.Log("Resetting 1!");
+            ResetObst();
+            ResetTransitions();
+            ResetCamera();
+        }
+        else if (checkpointId == 2)
+        {
+            Debug.Log("Resetting 2!");
+            ResetObst();
+            ResetTransitions();
+            ResetCamera();
+        }
     }
 
     public void ActivateCheckpoint()

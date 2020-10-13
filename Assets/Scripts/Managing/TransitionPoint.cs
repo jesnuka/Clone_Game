@@ -14,6 +14,11 @@ public class TransitionPoint : MonoBehaviour
 
     public int followValueAfter;
 
+    public bool blocksEntrance;
+    public GameObject blockObject;
+
+    public bool togglesBackground;
+
    
 
 
@@ -23,7 +28,9 @@ public class TransitionPoint : MonoBehaviour
         left,
         right,
         up,
-        down
+        down,
+        none,
+        boss
     }
 
     private void Awake()
@@ -58,12 +65,34 @@ public class TransitionPoint : MonoBehaviour
                     transitionDirection = Direction.left;
                     break;
                 case Direction.up:
-                    cameraManager.TransitionUp(followsAfter, amount);
+                    if(togglesBackground)
+                    {
+                        cameraManager.TransitionUp(followsAfter, amount, true);
+                    }
+                    else
+                    {
+                        cameraManager.TransitionUp(followsAfter, amount, false);
+                    }
                     transitionDirection = Direction.down;
                     break;
                 case Direction.down:
-                    cameraManager.TransitionDown(followsAfter, amount);
+                    if(togglesBackground)
+                    {
+                        cameraManager.TransitionDown(followsAfter, amount, true);
+                    }
+                    else
+                    {
+                        cameraManager.TransitionDown(followsAfter, amount, false);
+                    }
+                    
                     transitionDirection = Direction.up;
+                    break;
+                case Direction.none:
+                    break;
+                case Direction.boss:
+                    //Boss fight camera
+                    cameraManager.TransitionBoss(amount);
+                    //transitionDirection = Direction.left;
                     break;
             }
             if (wasFollowAfter)
@@ -80,10 +109,14 @@ public class TransitionPoint : MonoBehaviour
                 followsAfter = false;
             }
             
+            if(blocksEntrance)
+            {
+                blockObject.SetActive(true);
+            }
 
             if(isOneShot)
             {
-                Destroy(this.gameObject);
+               this.gameObject.SetActive(false);
             }
             
 
