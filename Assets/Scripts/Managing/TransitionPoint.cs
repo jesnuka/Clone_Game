@@ -10,6 +10,12 @@ public class TransitionPoint : MonoBehaviour
 
     public bool isOneShot;
     public bool followsAfter;
+    public bool wasFollowAfter;
+
+    public int followValueAfter;
+
+   
+
 
 
     public enum Direction
@@ -29,6 +35,17 @@ public class TransitionPoint : MonoBehaviour
     {
         if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<PlayerController2D>())
         {
+            if (wasFollowAfter)
+            {
+                Debug.Log("ok");
+               // followsAfter = true;
+              //  wasFollowAfter = false;
+            }
+            if (followsAfter)
+            {
+                    cameraManager.followAreaValue = followValueAfter;
+            }
+
             PlayerController2D player = other.attachedRigidbody.GetComponent<PlayerController2D>();
             switch (transitionDirection)
             {
@@ -49,7 +66,21 @@ public class TransitionPoint : MonoBehaviour
                     transitionDirection = Direction.up;
                     break;
             }
+            if (wasFollowAfter)
+            {
+                followsAfter = true;
+                wasFollowAfter = false;
+            }
+
+            else if (followsAfter)
+            {
+                //cameraManager.followAreaValue = followValueAfter;
+                // cameraManager.SwitchMode(CameraManager.Mode.Follow);
+                wasFollowAfter = true;
+                followsAfter = false;
+            }
             
+
             if(isOneShot)
             {
                 Destroy(this.gameObject);

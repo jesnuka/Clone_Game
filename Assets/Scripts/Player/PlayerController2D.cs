@@ -13,6 +13,7 @@ public class PlayerController2D : MonoBehaviour
     SoundManager soundManager;
 
     public float halfScreenWidth;
+    public float halfScreenHeight;
 
     [SerializeField]
     GameObject blackoutUI;
@@ -134,6 +135,8 @@ public class PlayerController2D : MonoBehaviour
     }
     private void Awake()
     {
+        //halfScreenHeight = Camera.main.pixelHeight / 2;
+        //halfScreenWidth = Camera.main.pixelWidth / 2;
         currentState = State.Normal;
         isFacingRight = true;
         rb2d = this.GetComponent<Rigidbody2D>();
@@ -502,12 +505,12 @@ public class PlayerController2D : MonoBehaviour
             case 0:
                 pushTimer = pushTimerMax;
                 currentState = State.Normal;
-                rb2d.velocity = new Vector2(rb2d.velocity.x - 0.25f, rb2d.velocity.y);
+                rb2d.velocity = new Vector2(rb2d.velocity.x - 0.25f, rb2d.velocity.y + 0.1f);
                 break;
             case 1:
                 pushTimer = pushTimerMax;
                 currentState = State.Normal;
-                rb2d.velocity = new Vector2(rb2d.velocity.x + 0.25f, rb2d.velocity.y);
+                rb2d.velocity = new Vector2(rb2d.velocity.x + 0.25f, rb2d.velocity.y+ 0.1f);
                 break;
             case 2:
                 pushTimer = pushTimerMax;
@@ -595,6 +598,22 @@ public class PlayerController2D : MonoBehaviour
                 Destroy(other.transform.gameObject);
             }
             
+        }
+        if (other.attachedRigidbody != null && other.gameObject.GetComponent<EnemyCollisionChecker>()) //Enemy collision damage.
+        {
+            EnemyCollisionChecker enemy = other.gameObject.GetComponent<EnemyCollisionChecker>();
+            enemy.enemyController.TouchedPlayer();
+
+            if (enemy.transform.position.x > transform.position.x)//Enemy on the right side
+            {
+                knockbackDirection = -1;
+            }
+            else //enemy on the left side
+            {
+                knockbackDirection = 1;
+            }
+
+            RemoveHealth(enemy.GetDamage());
         }
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public Camera mainCamera;
     public SpriteRenderer spriteRenderer;
     Rigidbody2D aliveRb2d;
     Animator aliveAnimator;
@@ -82,6 +83,10 @@ public class EnemyController : MonoBehaviour
 
     bool hotdogIsWaiting;
 
+    public bool spawnAreaActive;
+
+    public int hotDogSpawnAmount;
+
     // -- Hotdog related ends
 
 
@@ -136,11 +141,16 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
+        mainCamera = Camera.main;
         currentState = State.Moving;
         currentHealth = maxHealth;
         player = GameObject.Find("Player");
         
-
+        if(enemyType == EnemyType.bat)
+        {
+            batIsFleeing = true;
+            batSleepTimer = batSleepTimerMax;
+        }
         //Despawn, once player is in area, spawn them again
         DespawnEnemy();
 
@@ -152,35 +162,89 @@ public class EnemyController : MonoBehaviour
     {
         //halfScreenWidth Is current half of screen size width, change if screensize changes from player
 
-        float spawnerDistanceToPlayer = player.transform.position.x - this.transform.position.x;
-        float aliveDistanceToPlayer = player.transform.position.x - alive.transform.position.x;
+        float spawnerDistanceToPlayerX = player.transform.position.x - this.transform.position.x;
+        float spawnerDistanceToPlayerY = player.transform.position.y - this.transform.position.y;
+        float aliveDistanceToPlayerX = player.transform.position.x - alive.transform.position.x;
+        float aliveDistanceToPlayerY = player.transform.position.y - alive.transform.position.y;
 
+        Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
         float halfScreenWidth = player.GetComponent<PlayerController2D>().halfScreenWidth;
+        float halfScreenHeight = player.GetComponent<PlayerController2D>().halfScreenHeight;
 
         if (alive.activeSelf == false) // Is alive currently despawned?
         {
-            if ((spawnerDistanceToPlayer >= -halfScreenWidth) && (spawnerDistanceToPlayer <= halfScreenWidth) && !spawnedOnce)
+            if(mainCamera.gameObject.GetComponent<CameraManager>().currentMode == CameraManager.Mode.Follow) //Use certain width and height when follow camera on, otherwise screensize is the same constantly
             {
-                //Player is close enough, spawn enemy!
-                RespawnEnemy();
-                spawnedOnce = true;
-            }
-            else if ((spawnerDistanceToPlayer < -halfScreenWidth) || (spawnerDistanceToPlayer > halfScreenWidth))
-            {
-                spawnedOnce = false;
+                if ((spawnerDistanceToPlayerX >= -halfScreenWidth) && (spawnerDistanceToPlayerX <= halfScreenWidth) && (spawnerDistanceToPlayerY >= -halfScreenHeight) && (spawnerDistanceToPlayerY <= halfScreenHeight) && !spawnedOnce)
+                {
+                    //Player is close enough, spawn enemy!
+                    RespawnEnemy();
+                    spawnedOnce = true;
+                
+                }
+                else if (((spawnerDistanceToPlayerX < -halfScreenWidth) || (spawnerDistanceToPlayerX > halfScreenWidth)) && ((spawnerDistanceToPlayerY < -halfScreenHeight) || (spawnerDistanceToPlayerY > halfScreenHeight)))
+                {
+                    spawnedOnce = false;
+                }
             }
             else
             {
-                //Nothing needed here
+                if(spawnAreaActive && !spawnedOnce)
+                {
+                  //  Debug.Log("Spawn!! and once is "+spawnedOnce + " and is active?!?!? + " +alive.activeSelf);
+                    RespawnEnemy();
+                    spawnedOnce = true;
+                }
+                else if (!spawnAreaActive)
+                {
+                   // Debug.Log("ELIF Spawn!! and once is " + spawnedOnce + " and is active?!?!? + " + alive.activeSelf);
+                   // Debug.Log("Spawnedonce false");
+                    spawnedOnce = false;
+                }
             }
+         /*   else //Camera is stationary or transition, use new spawn mode
+            {
+                if (((spawnerDistanceToPlayerX >= -halfScreenWidth * 1.5) && (spawnerDistanceToPlayerX <= halfScreenWidth * 1.5) && !spawnedOnce) && (spawnerDistanceToPlayerY >= -halfScreenHeight * 2) && (spawnerDistanceToPlayerY <= halfScreenHeight * 2))
+                {
+                    Debug.Log("Respawn else");
+                    //Player is close enough, spawn enemy!
+                    RespawnEnemy();
+                    spawnedOnce = true;
+
+                }
+                else if (((spawnerDistanceToPlayerX < -halfScreenWidth * 1) || (spawnerDistanceToPlayerX > halfScreenWidth * 1)) && ((spawnerDistanceToPlayerY < -halfScreenHeight) || (spawnerDistanceToPlayerY > halfScreenHeight)))
+                {
+                    Debug.Log("spawned once else??");
+                    spawnedOnce = false;
+                }
+            }*/
         }
         else //Alive is active, do not respawn when close enough, but instead if far enough from ALIVE, despawn it.
         {
-
-            if ((aliveDistanceToPlayer < -halfScreenWidth) || (aliveDistanceToPlayer > halfScreenWidth))
+            if (mainCamera.gameObject.GetComponent<CameraManager>().currentMode == CameraManager.Mode.Follow) //Use certain width and height when follow camera on, otherwise screensize is the same constantly
             {
-                DespawnEnemy();
+                if (((aliveDistanceToPlayerX < -halfScreenWidth) || (aliveDistanceToPlayerX > halfScreenWidth)) && ((aliveDistanceToPlayerY < -halfScreenHeight ) || (aliveDistanceToPlayerY > halfScreenHeight)))
+                {
+                    DespawnEnemy();
+                }
             }
+            else
+            {
+                if(!spawnAreaActive)
+                {
+                    Debug.Log("despawn!");
+                    DespawnEnemy();
+                }
+            }
+           /* else //Camera is stationary or transition, use new despawn mode
+            {
+                if (((aliveDistanceToPlayerX < -halfScreenWidth*1) || (aliveDistanceToPlayerX > halfScreenWidth * 1)) && ((aliveDistanceToPlayerY < -halfScreenHeight * 2) || (aliveDistanceToPlayerY > halfScreenHeight * 2)))
+                {
+                    Debug.Log("Despawn else");
+                    DespawnEnemy();
+                }
+            }*/
+            
         }
             
         
@@ -671,11 +735,15 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyType.bat:
 
-                //TODO add sleep animation here!
-                aliveRb2d.velocity = Vector3.zero;
-                batIsFleeing = false;
-                batIsSleeping = true;
-                batSleepTimer = batSleepTimerMax;
+                if(batIsFleeing)
+                {
+                    //TODO add sleep animation here!
+                    aliveRb2d.velocity = Vector3.zero;
+                    batIsFleeing = false;
+                    batIsSleeping = true;
+                    batSleepTimer = batSleepTimerMax;
+                }
+                
 
                 break;
 
@@ -722,24 +790,41 @@ public class EnemyController : MonoBehaviour
 
     public void RemoveHealth(int damage)
     {
+
+
         if (currentHealth > 0)
         {
             int tempValue = currentHealth;
             tempValue -= damage;
             if (tempValue <= 0)
             {
-                //Die
-                hurtParticles.Play();
-                soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
-                currentHealth = 0;
-                currentState = State.Dead;
+                if ((enemyType == EnemyType.bat) && batIsSleeping) //Bat is invincible during sleep
+                {
+                    //Dont take dmg, add some clink effect
+                }
+                else
+                {
+                    //Die
+                    hurtParticles.Play();
+                    soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
+                    currentHealth = 0;
+                    currentState = State.Dead;
+                }
+                
             }
             else
             {
-                //TODO: Add "flash" effect
-                hurtParticles.Play();
-                soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
-                currentHealth = tempValue;
+                if ((enemyType == EnemyType.bat) && batIsSleeping) //Bat is invincible during sleep
+                {
+                    //Dont take dmg, add some clink effect
+                }
+                else
+                {
+                    hurtParticles.Play();
+                    soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
+                    currentHealth = tempValue;
+                }
+                
             }
         }
         else
@@ -799,6 +884,10 @@ public class EnemyController : MonoBehaviour
             }
 
             //Then despawn enemy
+            if(enemyType == EnemyType.hotdog)
+            {
+                hotDogSpawnAmount -= 1;
+            }
             DespawnEnemy();
         }
 

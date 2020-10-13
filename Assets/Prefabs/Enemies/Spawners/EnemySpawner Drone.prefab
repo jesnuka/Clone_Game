@@ -14528,6 +14528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a66ec4967cfa84b90492b8d105ba0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   spriteRenderer: {fileID: 0}
   player: {fileID: 0}
   dropItemsList:
@@ -14565,6 +14566,8 @@ MonoBehaviour:
   hotdogShootTimerMax: 0
   hotdogShootCounter: 0
   hotdogShootCounterMax: 0
+  spawnAreaActive: 0
+  hotDogSpawnAmount: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 1906623093085209974}

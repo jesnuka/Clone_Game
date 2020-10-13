@@ -46,8 +46,20 @@ public class EnemyCollisionChecker : MonoBehaviour
             Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), other);
         }
 
+        if (other.gameObject.layer == 14)
+        {
+            enemyController.CeilingHit();
+            // Destroy(gameObject);
+        }
+        if (enemyType == EnemyController.EnemyType.bat) // Bats can fly through floor / blocks
+        {
+            if (other.gameObject.layer == 8 || other.gameObject.layer == 10) //If collider is ground collider
+            {
+                Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), other);
+            }
+        }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+  /*  private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == 14)
         {
@@ -62,7 +74,7 @@ public class EnemyCollisionChecker : MonoBehaviour
             }
         }
         
-    }
+    }*/
         //Not used currently, right now player has this instead
         /*private void OnCollisionEnter2D(Collision2D collision)
         {

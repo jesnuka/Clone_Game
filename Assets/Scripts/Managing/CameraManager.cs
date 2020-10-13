@@ -33,12 +33,13 @@ public class CameraManager : MonoBehaviour
     //Transform transitionBegin;
     Vector3 transitionTarget;
 
-    bool followsAfter;
+    public bool followsAfter;
 
     //Use this when calling TransitionCamera function
     //It will select the specific begin and end transitions from the list
     //They need to be manually placed there currently and kept track of though
     public int transitionIndex;
+    public bool followNext;
     
 
 
@@ -116,7 +117,6 @@ public class CameraManager : MonoBehaviour
         playerController.PushPlayer(0);
         if(followValue)
         {
-            Debug.Log("follow? "+ followValue);
             followsAfter = true;
         }
     }
@@ -130,7 +130,6 @@ public class CameraManager : MonoBehaviour
         playerController.PushPlayer(1);
         if (followValue)
         {
-            Debug.Log("follow? " + followValue);
             followsAfter = true;
         }
     }
@@ -143,7 +142,7 @@ public class CameraManager : MonoBehaviour
         playerController.PushPlayer(2);
         if (followValue)
         {
-            Debug.Log("follow? " + followsAfter);
+            Debug.Log("FollowAfter is true now in camera");
             followsAfter = true;
         }
     }
@@ -156,7 +155,6 @@ public class CameraManager : MonoBehaviour
         playerController.PushPlayer(3);
         if (followValue)
         {
-            Debug.Log("follow? " + followValue);
             followsAfter = true;
         }
     }
@@ -169,23 +167,21 @@ public class CameraManager : MonoBehaviour
             transform.position = Vector3.Lerp(this.transform.position, transitionTarget, cameraMoveTime);
         }
 
-        Debug.Log("follow? " + followsAfter);
-
         if (cameraMoveTime >= cameraMoveTimeMax && !followsAfter)
         {
-            Debug.Log("follaaaaow? "+followsAfter);
             currentMode = Mode.Stationary;
             transform.position = transitionTarget;
         }
         else if(cameraMoveTime >= cameraMoveTimeMax && followsAfter)
         {
-            Debug.Log("follobbbbbw? " + followsAfter);
+            Debug.Log("Follow after");
             transform.position = transitionTarget;
             currentMode = Mode.Follow;
+            followsAfter = false;
         }
     }
 
-    void SwitchMode(Mode mode)
+    public void SwitchMode(Mode mode)
     {
         switch (mode)
         {

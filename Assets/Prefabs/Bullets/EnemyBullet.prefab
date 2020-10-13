@@ -145,11 +145,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e740bcfa52b2ea48bb6c29f060aac8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyTimer: 8
+  destroyTimer: 4
   speed: 8
   damage: 2
   destroyOnWalls: 0
   destroyOnEnemy: 0
+  bulletType: 0
 --- !u!1 &3891150450447293627
 GameObject:
   m_ObjectHideFlags: 0
