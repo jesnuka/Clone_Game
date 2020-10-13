@@ -95,23 +95,24 @@ public class CameraManager : MonoBehaviour
     {
         if(checkId == 0)
         {
-            Debug.Log("CHECKPOINT 1");
             transform.position = resetPos1;
             background.SetActive(true);
+            followAreaValue = 1;
+            currentMode = Mode.Follow;
         }
         else if (checkId == 1)
         {
-            Debug.Log("CHECKPOINT 2");
+            currentMode = Mode.Stationary;
             transform.position = resetPos2;
+            background2.SetActive(false);
+
         }
         else if (checkId == 2)
         {
-            Debug.Log("CHECKPOINT 3");
             transform.position = resetPos3;
-        }
-        else
-        {
-            Debug.Log("CHECKPOINT ??? ");
+            followAreaValue = 3;
+            currentMode = Mode.Follow;
+            this.GetComponent<Camera>().orthographicSize = 9;
         }
     }
 
@@ -119,17 +120,19 @@ public class CameraManager : MonoBehaviour
     {
         if(backgroundTimer < 0)
         {
-            if (background.activeSelf)
+            if (background.activeSelf || background2.activeSelf)
             {
                 background.SetActive(false);
                 background2.SetActive(false);
                 backgroundToggleOn = false;
             }
+            
             else
             {
                 background2.SetActive(true);
                 backgroundToggleOn = false;
             }
+
         }
     }
     void FollowPlayer()
@@ -238,6 +241,7 @@ public class CameraManager : MonoBehaviour
        // transitionTarget = new Vector3(transform.position.x + stageDimensions.x * amount, transform.position.y, transform.position.z);
         transitionTarget = new Vector3(bossfightTransform.x, bossfightTransform.y, transform.position.z);
         playerController.PushPlayer(1);
+        this.GetComponent<Camera>().orthographicSize = 15;
 
     }
     public void TransitionCamera(int i) //The value i is the direction. 0 = left, 1 = right, 2 = up, 3 = down

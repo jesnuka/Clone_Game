@@ -40,6 +40,7 @@ public class CheckpointScript : MonoBehaviour
         foreach (GameObject transition in activateableTransitions)
         {
             transition.SetActive(true);
+            transition.GetComponent<TransitionPoint>().ResetValue();
         }
     }
 
@@ -54,7 +55,6 @@ public class CheckpointScript : MonoBehaviour
         
         if(checkpointId == 0)
         {
-            Debug.Log("Resetting 0!");
             ResetObst();
             ResetPipes();
             ResetTransitions();
@@ -62,14 +62,12 @@ public class CheckpointScript : MonoBehaviour
         }
         else if (checkpointId == 1)
         {
-            Debug.Log("Resetting 1!");
             ResetObst();
             ResetTransitions();
             ResetCamera();
         }
         else if (checkpointId == 2)
         {
-            Debug.Log("Resetting 2!");
             ResetObst();
             ResetTransitions();
             ResetCamera();

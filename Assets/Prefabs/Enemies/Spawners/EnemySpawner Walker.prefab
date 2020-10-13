@@ -9694,14 +9694,16 @@ MonoBehaviour:
   - {fileID: 517028048178012318, guid: 32f600444c0db2c4e86208bac5226b6c, type: 3}
   batSleepTimer: 0
   batSleepTimerMax: 0
+  batIsSleeping: 0
+  batIsFleeing: 0
   bunnyWalkTimer: 0
   bunnyWalkTimerMax: 0.5
   bunnyWaitTimer: 0
   bunnyWaitTimerMax: 7
   bunnyShootTimer: 0
-  bunnyShootTimerMax: 2
+  bunnyShootTimerMax: 1.5
   bunnyShootCounter: 0
-  bunnyShootCounterMax: 3
+  bunnyShootCounterMax: 6
   hotdogWaitTimer: 0
   hotdogWaitTimerMax: 0
   hotdogShootTimer: 0

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController2D : MonoBehaviour
 {
@@ -251,6 +252,7 @@ public class PlayerController2D : MonoBehaviour
     { 
         gameOverUI.SetActive(true);
         gameIsOver = true;
+        SceneManager.LoadScene("GameScene_Menu");
     }
 
     void CheckInput()

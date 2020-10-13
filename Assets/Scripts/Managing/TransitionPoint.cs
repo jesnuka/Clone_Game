@@ -19,8 +19,7 @@ public class TransitionPoint : MonoBehaviour
 
     public bool togglesBackground;
 
-   
-
+    public bool flipped;
 
 
     public enum Direction
@@ -32,7 +31,40 @@ public class TransitionPoint : MonoBehaviour
         none,
         boss
     }
+    public void ResetValue()
+    {
+        if (flipped) //This means this has been turned to opposite at some point, so it needs to be reset
+        {
+            
+            if (wasFollowAfter)
+            {
+                followsAfter = true;
+                wasFollowAfter = false;
+            }
 
+            else if (followsAfter)
+            {
+                wasFollowAfter = true;
+                followsAfter = false;
+            }
+            switch (transitionDirection)
+            {
+                case Direction.left:
+                    transitionDirection = Direction.right;
+                    break;
+                case Direction.right:
+                    transitionDirection = Direction.left;
+                    break;
+                case Direction.up:
+                    transitionDirection = Direction.down;
+                    break;
+                case Direction.down:
+                    transitionDirection = Direction.up;
+                    break;
+            }
+            flipped = false;
+        }
+    }
     private void Awake()
     {
         cameraManager = Camera.main.gameObject.GetComponent<CameraManager>();
@@ -52,7 +84,14 @@ public class TransitionPoint : MonoBehaviour
             {
                     cameraManager.followAreaValue = followValueAfter;
             }
-
+            if(!flipped)
+            {
+                flipped = true;
+            }
+            else if(flipped)
+            {
+                flipped = false;
+            }
             PlayerController2D player = other.attachedRigidbody.GetComponent<PlayerController2D>();
             switch (transitionDirection)
             {
