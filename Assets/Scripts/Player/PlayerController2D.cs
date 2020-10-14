@@ -341,7 +341,7 @@ public class PlayerController2D : MonoBehaviour
         {
             playerLivesCurrent += amount;
             CreateParticles(4);
-            soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f);
+            soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f, false, Vector3.zero);
         }
     }
 
@@ -378,7 +378,7 @@ public class PlayerController2D : MonoBehaviour
                     rb2d.velocity = Vector2.zero;
                     currentState = State.Knockback;
                     knockbackTime = knockbackTimeMax;
-                    soundManager.PlaySound(SoundManager.Sound.playerTakeDamage, 1f);
+                    soundManager.PlaySound(SoundManager.Sound.playerTakeDamage, 1f, false, Vector3.zero);
                 }
             }
             else
@@ -410,14 +410,14 @@ public class PlayerController2D : MonoBehaviour
                 {
                     //Max out HP
                     CreateParticles(4);
-                    soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f);
+                    soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f, false, Vector3.zero);
                     playerHealthCurrent = playerHealthMax;
                 }
                 else
                 {
                     //Heal
                     CreateParticles(4);
-                    soundManager.PlaySound(SoundManager.Sound.playerPickup,1f);
+                    soundManager.PlaySound(SoundManager.Sound.playerPickup,1f,false, Vector3.zero);
                     playerHealthCurrent = tempValue;
                 }
             }
@@ -444,7 +444,7 @@ public class PlayerController2D : MonoBehaviour
                     bullet.transform.parent = this.transform;
                     bullet.GetComponent<BulletScript>().Shoot(shootDir);
                     bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
-                    soundManager.PlaySound(SoundManager.Sound.playerShoot,0.3f);
+                    soundManager.PlaySound(SoundManager.Sound.playerShoot,0.3f, false, Vector3.zero);
                     if(currentState == State.Climbing)
                     {
                         playerAnimator.Play("Player_ClimbShoot");
@@ -840,6 +840,7 @@ public class PlayerController2D : MonoBehaviour
         if(isGrounded)
         {
             currentState = State.Normal;
+            soundManager.PlaySound(SoundManager.Sound.playerLand, 0.3f, false, Vector3.zero);
             //playerAnimator.Play("Player_Idle");
         }
         else
@@ -876,7 +877,7 @@ public class PlayerController2D : MonoBehaviour
             //Jump can also be pressed a bit before landing for easier timed jumps
             rememberJumpPress = 0;
             rememberGrounded = 0;
-            soundManager.PlaySound(SoundManager.Sound.playerJump,0.8f);
+            soundManager.PlaySound(SoundManager.Sound.playerJump,0.8f,false, Vector3.zero);
             playerAnimator.Play("Player_Jump");
             animationDelayTime = animationDelayTimeMax;
             rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower);

@@ -16,7 +16,20 @@ public class SoundManager : MonoBehaviour
         playerPickup,
         playerJump,
         playerTakeDamage,
+        playerLand,
+        enemyDieChicken,
+        enemyDieWalker,
+        enemyDieDrone,
+        enemyDiePipe,
         enemyTakeDamage,
+        pipeShoot,
+        bossShoot,
+        bossSound1,
+        zombieShoot,
+        menuSelect,
+        menuMove,
+
+
        // delay,
     }
 
@@ -82,14 +95,22 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlaySound(Sound sound, float volume)
+    public void PlaySound(Sound sound, float volume, bool is3d, Vector3 pos)
     {
         if (CanPlaySound(sound))
         {
             GameObject soundGameObject = new GameObject("Sound");
             AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
             audioSource.volume = volume;
+            if (is3d)
+            {
+                audioSource.spatialBlend = 0.75f;
+                Debug.Log("Pos is " + pos);
+                audioSource.gameObject.transform.position = pos;
+            }
             audioSource.PlayOneShot(GetAudioClip(sound));
+           
+            
 
             Object.Destroy(soundGameObject, GetAudioClip(sound).length);
         }

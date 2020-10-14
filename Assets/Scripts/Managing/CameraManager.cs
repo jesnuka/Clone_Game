@@ -205,7 +205,6 @@ public class CameraManager : MonoBehaviour
         playerController.PushPlayer(2);
         if (followValue)
         {
-            Debug.Log("FollowAfter is true now in camera");
             followsAfter = true;
         }
         if (toggleBackground)

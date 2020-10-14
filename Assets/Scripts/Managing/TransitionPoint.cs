@@ -21,6 +21,10 @@ public class TransitionPoint : MonoBehaviour
 
     public bool flipped;
 
+    public bool startsSong;
+    public GameObject songToStart; 
+    public GameObject songToStop;
+
 
     public enum Direction
     {
@@ -152,6 +156,14 @@ public class TransitionPoint : MonoBehaviour
             {
                 blockObject.SetActive(true);
             }
+
+            if(startsSong)
+            {
+                songToStop.GetComponent<AudioSource>().Stop();
+                songToStart.GetComponent<AudioSource>().Play();
+                
+            }
+
 
             if(isOneShot)
             {

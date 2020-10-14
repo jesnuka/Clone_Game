@@ -111,6 +111,25 @@ public class EnemyController : MonoBehaviour
     // -- Gorilla related ends
 
 
+    // -- ROOSTER BOSS related starts
+
+    public float roosterMoveTimer;
+    public float roosterMoveTimerMax;
+
+    public float roosterWaitTimer;
+    public float roosterWaitTimerMax;
+
+    public float roosterShootTimer;
+    public float roosterShootTimerMax;
+
+    public bool roosterCanMove;
+
+
+    // -- ROOSTER BOSS related ends
+
+
+
+
     [SerializeField]
     private float
         groundCheckDistance,
@@ -135,7 +154,7 @@ public class EnemyController : MonoBehaviour
         gorilla,
         bird,
         hotdog,
-        rooster
+        rooster,
     }
 
     public enum State
@@ -166,6 +185,7 @@ public class EnemyController : MonoBehaviour
         currentState = State.Moving;
         currentHealth = maxHealth;
         player = GameObject.Find("Player");
+        soundManager = GameObject.FindWithTag("SoundManager").GetComponent<SoundManager>();
         
         if(enemyType == EnemyType.bat)
         {
@@ -452,6 +472,7 @@ public class EnemyController : MonoBehaviour
 
                     if ((bunnyShootTimer < 0) && bunnyShootCounter > 0) //Shoot, reset timer
                     {
+                        soundManager.PlaySound(SoundManager.Sound.zombieShoot, 1f, true, this.transform.position);
                         bunnyShootTimer = bunnyShootTimerMax;
                         bunnyShootCounter -= 1;
 
@@ -643,6 +664,7 @@ public class EnemyController : MonoBehaviour
                         hotdogIsWaiting = false;
                         hotdogShootTimer = hotdogShootTimerMax;
                         hotdogShootCounter = hotdogShootCounterMax;
+                        soundManager.PlaySound(SoundManager.Sound.pipeShoot, 1f, true, this.transform.position);
                     }
                 }
                 else
@@ -670,7 +692,16 @@ public class EnemyController : MonoBehaviour
                 
 
                 break;
-            case EnemyType.rooster:
+            case EnemyType.rooster: 
+                //ROOSTER == BOSS!
+                if(roosterCanMove)
+                {
+                    //Always goes left
+                    movement.Set(currentSpeed * -1, aliveRb2d.velocity.y);
+                    aliveRb2d.velocity = movement;
+                }
+
+
                 break;
             default:
                 //Default back and forth movement, use for simple enemies if needed
@@ -956,7 +987,7 @@ public class EnemyController : MonoBehaviour
                 {
                     //Die
                     hurtParticles.Play();
-                    soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
+                    soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f, true, this.transform.position);
                     currentHealth = 0;
                     currentState = State.Dead;
                 }
@@ -971,7 +1002,7 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     hurtParticles.Play();
-                    soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f);
+                    soundManager.PlaySound(SoundManager.Sound.enemyTakeDamage, 1f, true, this.transform.position);
                     currentHealth = tempValue;
                 }
                 
@@ -987,12 +1018,13 @@ public class EnemyController : MonoBehaviour
     void DespawnEnemy()
     {
         // Destroy(alive.gameObject);
+        
         alive.gameObject.SetActive(false);
     }
 
     public void DropItem()
     {
-        if(alive != null)
+        if(alive != null && enemyType != EnemyType.rooster)
         {
             //RandomNum can be removed, if items are later chosen depending on dropChance
           //  int randomNum = Random.Range(0, dropItemsList.Length);
@@ -1037,6 +1069,22 @@ public class EnemyController : MonoBehaviour
             if(enemyType == EnemyType.hotdog)
             {
                 hotDogSpawnAmount -= 1;
+            }
+            if (enemyType == EnemyType.bat)
+            {
+                soundManager.PlaySound(SoundManager.Sound.enemyDieDrone, 1f, true, this.transform.position);
+            }
+            else if (enemyType == EnemyType.bunny)
+            {
+                soundManager.PlaySound(SoundManager.Sound.enemyDieWalker, 1f, true, this.transform.position);
+            }
+            else if (enemyType == EnemyType.gorilla)
+            {
+                soundManager.PlaySound(SoundManager.Sound.enemyDieChicken, 0.3f, true, this.transform.position);
+            }
+            else if (enemyType == EnemyType.hotdog)
+            {
+                soundManager.PlaySound(SoundManager.Sound.enemyDiePipe, 0.3f, true, this.transform.position);
             }
             DespawnEnemy();
         }
