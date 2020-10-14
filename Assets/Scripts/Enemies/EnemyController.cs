@@ -52,6 +52,10 @@ public class EnemyController : MonoBehaviour
     public bool batIsSleeping;
     public bool batIsFleeing;
     Vector3 batFleePos;
+
+    public GameObject droneSpriteObject;
+    public GameObject droneSpriteObject2;
+
     // -- Bat related ends
 
     // -- Bunny related starts
@@ -84,7 +88,7 @@ public class EnemyController : MonoBehaviour
     bool hotdogIsWaiting;
 
     public bool spawnAreaActive;
-
+    public GameObject hotdogBulletHole;
     public int hotDogSpawnAmount;
 
     // -- Hotdog related ends
@@ -378,6 +382,9 @@ public class EnemyController : MonoBehaviour
         alive = aliveNew;*/
         if(enemyType == EnemyType.bat)
         {
+            droneSpriteObject.SetActive(false);
+            droneSpriteObject2.SetActive(true);
+            droneSpriteObject2.GetComponent<Animator>().Play("Drone_Wait");
             batIsSleeping = true;
             float rand = Random.Range(1, batSleepTimerMax);
             batSleepTimer = rand;
@@ -545,6 +552,9 @@ public class EnemyController : MonoBehaviour
                     alive.transform.position = Vector3.MoveTowards(alive.transform.position, batFleePos, currentSpeed*4);
                     if(alive.transform.position == batFleePos)
                     {
+                        droneSpriteObject.SetActive(false);
+                        droneSpriteObject2.SetActive(true);
+                        droneSpriteObject2.GetComponent<Animator>().Play("Drone_Wait");
                         aliveRb2d.velocity = Vector3.zero;
                         batIsFleeing = false;
                         batIsSleeping = true;
@@ -559,6 +569,9 @@ public class EnemyController : MonoBehaviour
                     {
                         if (!batIsSleeping) //If awake, allow movement
                         {
+                            droneSpriteObject2.SetActive(false);
+                            droneSpriteObject.SetActive(true);
+                            droneSpriteObject.GetComponent<Animator>().Play("Drone_Attack1");
                             alive.transform.position = Vector3.MoveTowards(alive.transform.position, player.transform.position, currentSpeed);
                         }
                         else //If the bat is sleeping, wake up once countdown reaches 0
@@ -678,7 +691,7 @@ public class EnemyController : MonoBehaviour
 
                         GameObject bullet = Instantiate(bulletList[0]); //This is fire
                         bullet.transform.parent = this.transform;
-                        bullet.transform.position = alive.transform.position;
+                        bullet.transform.position = hotdogBulletHole.transform.position;//alive.transform.position;
                         bullet.GetComponent<EnemyBulletScript>().Shoot(player.transform.position);
 
                         //bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
@@ -949,11 +962,13 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyType.bat:
 
-                    batIsFleeing = true;
-                    float fleeDist = Random.Range(10f, 15f);
-                    batFleePos = new Vector3(alive.transform.position.x, alive.transform.position.y + fleeDist, alive.transform.position.z);
-
-                    break;
+                droneSpriteObject.SetActive(false);
+                droneSpriteObject2.SetActive(true);
+                droneSpriteObject2.GetComponent<Animator>().Play("Drone_Wait");
+                batIsFleeing = true;
+                float fleeDist = Random.Range(10f, 15f);
+                batFleePos = new Vector3(alive.transform.position.x, alive.transform.position.y + fleeDist, alive.transform.position.z);
+                break;
 
             case EnemyType.gorilla:
                 break;
@@ -1072,19 +1087,19 @@ public class EnemyController : MonoBehaviour
             }
             if (enemyType == EnemyType.bat)
             {
-                soundManager.PlaySound(SoundManager.Sound.enemyDieDrone, 1f, true, this.transform.position);
+                soundManager.PlaySound(SoundManager.Sound.enemyDieDrone, 0.8f, true, this.transform.position);
             }
             else if (enemyType == EnemyType.bunny)
             {
-                soundManager.PlaySound(SoundManager.Sound.enemyDieWalker, 1f, true, this.transform.position);
+                soundManager.PlaySound(SoundManager.Sound.enemyDieWalker, 0.8f, true, this.transform.position);
             }
             else if (enemyType == EnemyType.gorilla)
             {
-                soundManager.PlaySound(SoundManager.Sound.enemyDieChicken, 0.3f, true, this.transform.position);
+                soundManager.PlaySound(SoundManager.Sound.enemyDieChicken, 0.8f, true, this.transform.position);
             }
             else if (enemyType == EnemyType.hotdog)
             {
-                soundManager.PlaySound(SoundManager.Sound.enemyDiePipe, 0.3f, true, this.transform.position);
+                soundManager.PlaySound(SoundManager.Sound.enemyDiePipe, 0.8f, true, this.transform.position);
             }
             DespawnEnemy();
         }

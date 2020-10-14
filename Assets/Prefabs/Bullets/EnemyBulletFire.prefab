@@ -4959,7 +4959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyTimer: 3
-  speed: 10
+  speed: 8
   damage: 4
   destroyOnWalls: 0
   destroyOnEnemy: 0

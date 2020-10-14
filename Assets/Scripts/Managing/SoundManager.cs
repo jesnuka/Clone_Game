@@ -105,7 +105,6 @@ public class SoundManager : MonoBehaviour
             if (is3d)
             {
                 audioSource.spatialBlend = 0.75f;
-                Debug.Log("Pos is " + pos);
                 audioSource.gameObject.transform.position = pos;
             }
             audioSource.PlayOneShot(GetAudioClip(sound));

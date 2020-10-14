@@ -63,7 +63,7 @@ public class EnemyBulletScript : MonoBehaviour
 
             // rb2d.velocity = new Vector3(speed * -1, rb2d.velocity.y, 0);
             
-            transform.position += new Vector3(0f, (fireCurveCounter * 5) * Time.deltaTime, 0f);
+            transform.position += new Vector3(0f, (fireCurveCounter * 4) * Time.deltaTime, 0f);
             transform.position += new Vector3((-1 * speed) * Time.deltaTime, 0f, 0f);
         }
         else

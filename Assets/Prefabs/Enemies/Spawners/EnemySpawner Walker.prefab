@@ -9696,6 +9696,8 @@ MonoBehaviour:
   batSleepTimerMax: 0
   batIsSleeping: 0
   batIsFleeing: 0
+  droneSpriteObject: {fileID: 0}
+  droneSpriteObject2: {fileID: 0}
   bunnyWalkTimer: 0
   bunnyWalkTimerMax: 0.5
   bunnyWaitTimer: 0
@@ -14619,6 +14621,18 @@ PrefabInstance:
     - target: {fileID: 510720455460021014, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
       propertyPath: m_Color.b
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 510720455460021014, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -492707183
+      objectReference: {fileID: 0}
+    - target: {fileID: 510720455460021014, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 510720455460021014, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2222154032241065060, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
       propertyPath: m_Name

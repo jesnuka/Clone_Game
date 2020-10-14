@@ -14555,6 +14555,8 @@ MonoBehaviour:
   batSleepTimerMax: 0
   batIsSleeping: 0
   batIsFleeing: 0
+  droneSpriteObject: {fileID: 0}
+  droneSpriteObject2: {fileID: 0}
   bunnyWalkTimer: 0
   bunnyWalkTimerMax: 0.5
   bunnyWaitTimer: 0
@@ -14577,7 +14579,15 @@ MonoBehaviour:
   gorillaJumpTimerMax: 0.1
   gorillaSpawnJumpTimer: 0
   gorillaSpawnJumpTimerMax: 0.325
+  hasPlatform: 0
   targetPlatform: {fileID: 0}
+  roosterMoveTimer: 0
+  roosterMoveTimerMax: 0
+  roosterWaitTimer: 0
+  roosterWaitTimerMax: 0
+  roosterShootTimer: 0
+  roosterShootTimerMax: 0
+  roosterCanMove: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 7433336954274492446}
@@ -14639,6 +14649,10 @@ PrefabInstance:
     - target: {fileID: 4797779362802970927, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
       propertyPath: m_Name
       value: Alive
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581445933626846813, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
