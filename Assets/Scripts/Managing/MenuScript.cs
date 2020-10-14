@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour
 {
+    public SoundManager soundManager;
+
     public GameObject menuElements;
     public GameObject creditsElements;
     public GameObject controlsElements;
@@ -17,19 +19,27 @@ public class MenuScript : MonoBehaviour
             menuAudioSource = this.GetComponent<AudioSource>();
         }
     }
+
+    public void PlayMoveSound()
+    {
+        soundManager.PlaySound(SoundManager.Sound.menuMove, 1f, false, Vector3.zero);
+    }
     public void StartGame()
     {
         SceneManager.LoadScene("GameScene_Level1");
+        soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);
     }
 
     public void Credits()
     {
+        soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);
         menuElements.SetActive(false);
         creditsElements.SetActive(true);
     }
 
     public void Controls()
     {
+        soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);
         menuElements.SetActive(false);
         controlsElements.SetActive(true);
     }
@@ -37,6 +47,7 @@ public class MenuScript : MonoBehaviour
 
     public void returnToMenu()
     {
+        soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);
         menuElements.SetActive(true);
         controlsElements.SetActive(false);
         creditsElements.SetActive(false);
@@ -44,6 +55,7 @@ public class MenuScript : MonoBehaviour
 
     public void Quit()
     {
+        soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);
         Application.Quit();
     }
 

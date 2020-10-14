@@ -14545,7 +14545,7 @@ MonoBehaviour:
   currentSpeed: 10
   damage: 4
   currentState: 1
-  enemyType: 0
+  enemyType: 5
   enemyTypeGameObject: {fileID: 5400417854842728380}
   alive: {fileID: 5400417854842728380}
   inPlayerView: 0
@@ -14555,6 +14555,8 @@ MonoBehaviour:
   batSleepTimerMax: 0
   batIsSleeping: 0
   batIsFleeing: 0
+  droneSpriteObject: {fileID: 0}
+  droneSpriteObject2: {fileID: 0}
   bunnyWalkTimer: 0
   bunnyWalkTimerMax: 0.5
   bunnyWaitTimer: 0
@@ -14570,6 +14572,7 @@ MonoBehaviour:
   hotdogShootCounter: 0
   hotdogShootCounterMax: 0
   spawnAreaActive: 0
+  hotdogBulletHole: {fileID: 0}
   hotDogSpawnAmount: 0
   gorillaWaitTimer: 0
   gorillaWaitTimerMax: 0
@@ -14585,6 +14588,8 @@ MonoBehaviour:
   roosterWaitTimerMax: 0
   roosterShootTimer: 0
   roosterShootTimerMax: 0
+  roosterShootCounter: 0
+  roosterShootCounterMax: 0
   roosterCanMove: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
@@ -14600,6 +14605,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1910063031081700885}
     m_Modifications:
+    - target: {fileID: 2222154032241065048, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: enemyType
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2222154032241065060, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
       propertyPath: m_Name
       value: Alive

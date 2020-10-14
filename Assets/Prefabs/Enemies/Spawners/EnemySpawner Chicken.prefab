@@ -14572,6 +14572,7 @@ MonoBehaviour:
   hotdogShootCounter: 0
   hotdogShootCounterMax: 0
   spawnAreaActive: 0
+  hotdogBulletHole: {fileID: 0}
   hotDogSpawnAmount: 0
   gorillaWaitTimer: 0
   gorillaWaitTimerMax: 1.5
@@ -14580,6 +14581,8 @@ MonoBehaviour:
   gorillaSpawnJumpTimer: 0
   gorillaSpawnJumpTimerMax: 0.325
   hasPlatform: 0
+  chickenSpriteObject: {fileID: 3616189093779195829}
+  chickenSpriteObject2: {fileID: 7696326697054353857}
   targetPlatform: {fileID: 0}
   roosterMoveTimer: 0
   roosterMoveTimerMax: 0
@@ -14587,7 +14590,10 @@ MonoBehaviour:
   roosterWaitTimerMax: 0
   roosterShootTimer: 0
   roosterShootTimerMax: 0
+  roosterShootCounter: 0
+  roosterShootCounterMax: 0
   roosterCanMove: 0
+  shootPos: {fileID: 0}
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 7433336954274492446}
@@ -14602,6 +14608,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8290208333998767124}
     m_Modifications:
+    - target: {fileID: 1698682417218424165, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4797779362802970926, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14650,6 +14660,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alive
       objectReference: {fileID: 0}
+    - target: {fileID: 5725058229145170705, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6581445933626846813, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
       propertyPath: m_SortingOrder
       value: 2
@@ -14676,8 +14690,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4797779363804865089, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
   m_PrefabInstance: {fileID: 2719512796539144912}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3616189093779195829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1698682417218424165, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+  m_PrefabInstance: {fileID: 2719512796539144912}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &9144656136238802061 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 6581445933626846813, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+  m_PrefabInstance: {fileID: 2719512796539144912}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7696326697054353857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5725058229145170705, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
   m_PrefabInstance: {fileID: 2719512796539144912}
   m_PrefabAsset: {fileID: 0}

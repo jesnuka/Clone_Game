@@ -14571,6 +14571,7 @@ MonoBehaviour:
   hotdogShootCounter: 0
   hotdogShootCounterMax: 0
   spawnAreaActive: 0
+  hotdogBulletHole: {fileID: 0}
   hotDogSpawnAmount: 0
   gorillaWaitTimer: 0
   gorillaWaitTimerMax: 0
@@ -14586,6 +14587,8 @@ MonoBehaviour:
   roosterWaitTimerMax: 0
   roosterShootTimer: 0
   roosterShootTimerMax: 0
+  roosterShootCounter: 0
+  roosterShootCounterMax: 0
   roosterCanMove: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
@@ -14880,6 +14883,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4111518059000598072, guid: c3353055e24239d4181b3d7992419722, type: 3}
       propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4579478144474601731, guid: c3353055e24239d4181b3d7992419722, type: 3}
+      propertyPath: enemyType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4579478144474601790, guid: c3353055e24239d4181b3d7992419722, type: 3}

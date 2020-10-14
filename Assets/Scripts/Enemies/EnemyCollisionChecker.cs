@@ -11,6 +11,7 @@ public class EnemyCollisionChecker : MonoBehaviour
 
     public EnemyController.EnemyType enemyType;
 
+
     private void Awake()
     {
         /*if(enemyController == null)
@@ -58,23 +59,19 @@ public class EnemyCollisionChecker : MonoBehaviour
                 Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), other);
             }
         }
+        
     }
-  /*  private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if (collision.gameObject.layer == 14)
+        if (enemyType == EnemyController.EnemyType.rooster) // Boss ignores ground blocks
         {
-            enemyController.CeilingHit();
-            // Destroy(gameObject);
-        }
-        if(enemyType == EnemyController.EnemyType.bat) // Bats can fly through floor / blocks
-        {
-            if (collision.gameObject.layer == 8 || collision.gameObject.layer == 10) //If collider is ground collider
+            if (other.otherRigidbody != null && !other.otherRigidbody.GetComponent<PlayerController2D>())
             {
-                Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), collision.collider);
+                Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), other.collider);
             }
         }
-        
-    }*/
+
+    }
         //Not used currently, right now player has this instead
         /*private void OnCollisionEnter2D(Collision2D collision)
         {

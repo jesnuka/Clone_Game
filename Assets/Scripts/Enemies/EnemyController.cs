@@ -109,6 +109,9 @@ public class EnemyController : MonoBehaviour
 
     bool gorillaFirstJumped;
 
+    public GameObject chickenSpriteObject;
+    public GameObject chickenSpriteObject2;
+
     //This is to save time, allows to choose which platform collision to ignore
     public GameObject targetPlatform;
 
@@ -126,8 +129,12 @@ public class EnemyController : MonoBehaviour
     public float roosterShootTimer;
     public float roosterShootTimerMax;
 
+    public int roosterShootCounter;
+    public int roosterShootCounterMax;
+
     public bool roosterCanMove;
 
+    public GameObject shootPos;
 
     // -- ROOSTER BOSS related ends
 
@@ -411,6 +418,12 @@ public class EnemyController : MonoBehaviour
             
         }
 
+        else if(enemyType == EnemyType.rooster) //BOSS
+        {
+            //Physics2D.IgnoreCollision(aliveCollider2d, targetPlatform.GetComponent<Collider2D>(), true);
+            roosterWaitTimer = roosterWaitTimerMax;
+        }
+
         alive.transform.position = this.transform.position;
         currentHealth = maxHealth;
         alive.gameObject.SetActive(true);
@@ -496,6 +509,7 @@ public class EnemyController : MonoBehaviour
                     //    Debug.Log("Wait STOP");
                         bunnyIsWaiting = false;
                         bunnyWalkTimer = bunnyWalkTimerMax;
+                        soundManager.PlaySound(SoundManager.Sound.walkerMove, 1f, true, this.transform.position);
                         //bunnyMovePos =
                         //Set movement
                     }
@@ -597,38 +611,66 @@ public class EnemyController : MonoBehaviour
                 if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
                 {
                     facingDirection = 1;
-                    //alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
-                    spriteRenderer.flipX = true;
+                    alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    //spriteRenderer.flipX = true;
+                   // chickenSpriteObject2.GetComponent<SpriteRenderer>().flipX = true;
+                    //chickenSpriteObject.GetComponent<SpriteRenderer>().flipX = true;
 
                 }
                 else //Player is on the left side
                 {
                     facingDirection = -1;
-                   // alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
-                    spriteRenderer.flipX = false;
+                    alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0, alive.transform.rotation.z, alive.transform.rotation.w);
+                    //spriteRenderer.flipX = false;
+                    //chickenSpriteObject2.GetComponent<SpriteRenderer>().flipX = false;
+                   // chickenSpriteObject.GetComponent<SpriteRenderer>().flipX = false;
                 }
 
                 if (gorillaFirstJumped) //Has already spawn jumped
                 {
-                    //groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+                    groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
 
-                    if (gorillaIsWaiting) //Wait, then after time runs out, start shooting
+                    if(groundDetected)
                     {
-                       // aliveRb2d.velocity = new Vector3(0f, aliveRb2d.velocity.y, 0f); //Pause between
+                        Debug.Log("Hi");
+                        chickenSpriteObject2.SetActive(false);
+                        chickenSpriteObject.SetActive(true);
+                    }
+                    else
+                    {
+                        chickenSpriteObject2.SetActive(true);
+                        chickenSpriteObject.SetActive(false);
+                    }
+                    if (gorillaIsWaiting) //Wait, then after time runs out, start 
+                    {
+                        Debug.Log("waiting");
+                        
+                        // aliveRb2d.velocity = new Vector3(0f, aliveRb2d.velocity.y, 0f); //Pause between
                         gorillaWaitTimer -= Time.deltaTime;
                         if (gorillaWaitTimer < 0)
                         {
+                            soundManager.PlaySound(SoundManager.Sound.chickenJump, 1f, true, this.transform.position);
                             gorillaIsWaiting = false;
+                           // chickenSpriteObject2.SetActive(true);
+                           // chickenSpriteObject.SetActive(false);
+
                         }
                     }
                     else
                     {
                         gorillaJumpTimer -= Time.deltaTime;
-
-                        if(gorillaJumpTimer < 0)
+                        Debug.Log("jump");
+                      //  chickenSpriteObject2.SetActive(true);
+                       // chickenSpriteObject.SetActive(false);
+                        if (gorillaJumpTimer < 0)
                         {
+                            // chickenSpriteObject2.SetActive(false);
+                            //  chickenSpriteObject.SetActive(true);
+                           
                             gorillaIsWaiting = true;
                             gorillaWaitTimer = gorillaWaitTimerMax;
+                          //  chickenSpriteObject2.SetActive(true);
+                           // chickenSpriteObject.SetActive(false);
                         }
                         //aliveRb2d.velocity = new Vector3(0f, aliveRb2d.velocity.y, 0f);
                         movement.Set(currentSpeed/2 * facingDirection, aliveRb2d.velocity.y + 15f);
@@ -641,6 +683,7 @@ public class EnemyController : MonoBehaviour
                     aliveRb2d.velocity = movement;
                     if (gorillaSpawnJumpTimer < 0)
                     {
+                        soundManager.PlaySound(SoundManager.Sound.chickenJump, 1f, true, this.transform.position);
                         gorillaFirstJumped = true;
                         if (hasPlatform)
                         {
@@ -707,11 +750,51 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyType.rooster: 
                 //ROOSTER == BOSS!
-                if(roosterCanMove)
+
+                if(roosterCanMove) //Allows moving and shooting!
                 {
-                    //Always goes left
-                    movement.Set(currentSpeed * -1, aliveRb2d.velocity.y);
-                    aliveRb2d.velocity = movement;
+                    Debug.Log("Canmove");
+                    roosterMoveTimer -= Time.deltaTime;
+                    roosterShootTimer -= Time.deltaTime;
+
+                    if(roosterShootTimer < 0 && roosterShootCounter > 0) //Shoot, shoots multiple times per movement
+                    {
+                        roosterShootTimer = roosterShootTimerMax;
+                        roosterShootCounter -= 1;
+
+                        GameObject bullet = Instantiate(bulletList[0]);
+                        bullet.transform.parent = this.transform;
+                        bullet.transform.position = shootPos.transform.position;
+                        bullet.GetComponent<EnemyBulletScript>().Shoot(player.transform.position);
+                    }
+
+                    if(roosterMoveTimer < 0)
+                    {
+                        Debug.Log("eback to waitina");
+                        roosterCanMove = false; //Start waiting!
+                        roosterWaitTimer = roosterWaitTimerMax;
+                    }
+                    else
+                    {
+                        //Always goes left
+                        movement.Set(currentSpeed * -1, 0);
+                        aliveRb2d.velocity = movement;
+                    }
+                    
+                }
+                else //Wait, until act again
+                {
+                    Debug.Log("Waiting");
+                    aliveRb2d.velocity = new Vector3(0f, 0f, 0f);
+                    roosterWaitTimer -= Time.deltaTime;
+                    if(roosterWaitTimer < 0)
+                    {
+                        Debug.Log("eeaa");
+                        roosterCanMove = true;
+                        roosterMoveTimer = roosterMoveTimerMax;
+                        roosterShootTimer = roosterShootTimerMax;
+                        roosterShootCounter = roosterShootCounterMax;
+                    }
                 }
 
 

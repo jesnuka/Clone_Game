@@ -10,7 +10,11 @@ public class SongController : MonoBehaviour
     public float currentVolume1;
     public float maxVolume1;
 
+    public float volume1Divider;
+   
+
     public float currentVolume2;
+    public float volume2Divider;
 
     public GameObject songToStart;
     public GameObject songToStop;
@@ -43,9 +47,9 @@ public class SongController : MonoBehaviour
     {
         if(hasStarted && !stopped)
         {
-            currentVolume1 += Time.deltaTime/100;
+            currentVolume1 += Time.deltaTime/volume1Divider;
             songToStart.GetComponent<AudioSource>().volume = currentVolume1;
-            currentVolume2 -= Time.deltaTime/40;
+            currentVolume2 -= Time.deltaTime/volume2Divider;
             songToStop.GetComponent<AudioSource>().volume = currentVolume2;
         }
         if(currentVolume2 < 0 && currentVolume1 >= maxVolume1)

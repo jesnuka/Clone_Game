@@ -28,6 +28,9 @@ public class SoundManager : MonoBehaviour
         zombieShoot,
         menuSelect,
         menuMove,
+        walkerMove,
+        chickenJump,
+
 
 
        // delay,
