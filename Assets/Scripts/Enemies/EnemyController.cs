@@ -71,6 +71,7 @@ public class EnemyController : MonoBehaviour
     public int bunnyShootCounter;
     public int bunnyShootCounterMax;
 
+
     //Vector3 bunnyMovePos;
     bool bunnyIsWaiting;
     // -- Bunny related ends
@@ -498,7 +499,7 @@ public class EnemyController : MonoBehaviour
 
                         GameObject bullet = Instantiate(bulletList[0]);
                         bullet.transform.parent = this.transform;
-                        bullet.transform.position = alive.transform.position;
+                        bullet.transform.position = new Vector3(alive.transform.position.x, alive.transform.position.y+ 1.5f, alive.transform.position.z);
                         bullet.GetComponent<EnemyBulletScript>().Shoot(player.transform.position);
 
                         //bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);

@@ -13,6 +13,10 @@ public class CheckpointScript : MonoBehaviour
     public GameObject[] activateableTransitions;
     public EnemyController[] activateableEnemies; //For pipes, as they spawn only once
 
+    public GameObject activateSong; //Switch music back
+    public float activateVolume;
+    public GameObject disableSong; //Turn off
+
 
     private void Awake()
     {
@@ -33,6 +37,14 @@ public class CheckpointScript : MonoBehaviour
         {
             enemy.hotDogSpawnAmount = 1;
         }
+    }
+
+    public void ResetSongs()
+    {
+        activateSong.GetComponent<AudioSource>().volume = activateVolume;
+        activateSong.GetComponent<AudioSource>().Play();
+        disableSong.GetComponent<AudioSource>().Stop();
+
     }
 
     public void ResetTransitions()
@@ -59,18 +71,21 @@ public class CheckpointScript : MonoBehaviour
             ResetPipes();
             ResetTransitions();
             ResetCamera();
+            ResetSongs();
         }
         else if (checkpointId == 1)
         {
             ResetObst();
             ResetTransitions();
             ResetCamera();
+            ResetSongs();
         }
         else if (checkpointId == 2)
         {
             ResetObst();
             ResetTransitions();
             ResetCamera();
+            ResetSongs();
         }
     }
 
