@@ -89,6 +89,27 @@ public class EnemyController : MonoBehaviour
 
     // -- Hotdog related ends
 
+    // -- Gorilla related starts
+
+    public float gorillaWaitTimer;
+    public float gorillaWaitTimerMax;
+
+    public float gorillaJumpTimer;
+    public float gorillaJumpTimerMax;
+
+    public float gorillaSpawnJumpTimer;
+    public float gorillaSpawnJumpTimerMax;
+
+    bool gorillaIsWaiting;
+    public bool hasPlatform;
+
+    bool gorillaFirstJumped;
+
+    //This is to save time, allows to choose which platform collision to ignore
+    public GameObject targetPlatform;
+
+    // -- Gorilla related ends
+
 
     [SerializeField]
     private float
@@ -342,6 +363,27 @@ public class EnemyController : MonoBehaviour
             batSleepTimer = rand;
         }
 
+        else if(enemyType == EnemyType.gorilla)
+        {
+            gorillaFirstJumped = false;
+            //Do first jump to platform, set ignorelayer
+            if(hasPlatform)
+            {
+                Physics2D.IgnoreCollision(aliveCollider2d, targetPlatform.GetComponent<Collider2D>(), true);
+                gorillaSpawnJumpTimer = gorillaSpawnJumpTimerMax;
+
+                //Do first leap here as well!
+                facingDirection = -1;
+                movement.Set(1.5f * facingDirection, aliveRb2d.velocity.y + 20f);
+                aliveRb2d.velocity = movement;
+            }
+            else
+            {
+                gorillaIsWaiting = true;
+            }
+            
+        }
+
         alive.transform.position = this.transform.position;
         currentHealth = maxHealth;
         alive.gameObject.SetActive(true);
@@ -518,12 +560,82 @@ public class EnemyController : MonoBehaviour
 
                 break;
             case EnemyType.gorilla:
-                break;
+                if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
+                {
+                    facingDirection = 1;
+                    //alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = true;
+
+                }
+                else //Player is on the left side
+                {
+                    facingDirection = -1;
+                   // alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = false;
+                }
+
+                if (gorillaFirstJumped) //Has already spawn jumped
+                {
+                    //groundDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+
+                    if (gorillaIsWaiting) //Wait, then after time runs out, start shooting
+                    {
+                       // aliveRb2d.velocity = new Vector3(0f, aliveRb2d.velocity.y, 0f); //Pause between
+                        gorillaWaitTimer -= Time.deltaTime;
+                        if (gorillaWaitTimer < 0)
+                        {
+                            gorillaIsWaiting = false;
+                        }
+                    }
+                    else
+                    {
+                        gorillaJumpTimer -= Time.deltaTime;
+
+                        if(gorillaJumpTimer < 0)
+                        {
+                            gorillaIsWaiting = true;
+                            gorillaWaitTimer = gorillaWaitTimerMax;
+                        }
+                        //aliveRb2d.velocity = new Vector3(0f, aliveRb2d.velocity.y, 0f);
+                        movement.Set(currentSpeed/2 * facingDirection, aliveRb2d.velocity.y + 15f);
+                        aliveRb2d.velocity = movement;
+                    }
+                }
+                else
+                {
+                    gorillaSpawnJumpTimer -= Time.deltaTime;
+                    aliveRb2d.velocity = movement;
+                    if (gorillaSpawnJumpTimer < 0)
+                    {
+                        gorillaFirstJumped = true;
+                        if (hasPlatform)
+                        {
+                            Physics2D.IgnoreCollision(aliveCollider2d, targetPlatform.GetComponent<Collider2D>(), false);
+                        }
+                        gorillaIsWaiting = true;
+                        gorillaWaitTimer = gorillaWaitTimerMax;
+                    }
+                }
+                
+                    break;
             case EnemyType.bird:
                 break;
             case EnemyType.hotdog:
+                if (player.transform.position.x > alive.transform.position.x) //Player is on the right side
+                {
+                    facingDirection = 1;
+                    // alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 0f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = true;
 
-                if(hotdogIsWaiting) //Wait, then after time runs out, start shooting
+                }
+                else //Player is on the left side
+                {
+                    facingDirection = -1;
+                    //alive.transform.rotation = new Quaternion(alive.transform.rotation.x, 180f, alive.transform.rotation.z, alive.transform.rotation.w);
+                    spriteRenderer.flipX = false;
+                }
+
+                if (hotdogIsWaiting) //Wait, then after time runs out, start shooting
                 {
                     hotdogWaitTimer -= Time.deltaTime;
                     if(hotdogWaitTimer < 0 )
