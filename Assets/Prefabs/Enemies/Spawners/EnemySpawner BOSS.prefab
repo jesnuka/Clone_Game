@@ -14581,6 +14581,9 @@ MonoBehaviour:
   gorillaSpawnJumpTimer: 0
   gorillaSpawnJumpTimerMax: 0
   hasPlatform: 0
+  isOutside: 0
+  chickenSpriteObject: {fileID: 0}
+  chickenSpriteObject2: {fileID: 0}
   targetPlatform: {fileID: 0}
   roosterMoveTimer: 0
   roosterMoveTimerMax: 0
@@ -14591,6 +14594,8 @@ MonoBehaviour:
   roosterShootCounter: 0
   roosterShootCounterMax: 0
   roosterCanMove: 0
+  shootPos: {fileID: 0}
+  roosterCutsceneOver: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 5400417855747990621}
@@ -14605,6 +14610,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1910063031081700885}
     m_Modifications:
+    - target: {fileID: 510720455460021014, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -492707183
+      objectReference: {fileID: 0}
+    - target: {fileID: 510720455460021014, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2222154032241065048, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
       propertyPath: enemyType
       value: 5
@@ -14656,6 +14669,14 @@ PrefabInstance:
     - target: {fileID: 2222154032241065061, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699466503618490401, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699466503618490401, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e34978f67ff778844b40fbdf6270fa5f, type: 3}

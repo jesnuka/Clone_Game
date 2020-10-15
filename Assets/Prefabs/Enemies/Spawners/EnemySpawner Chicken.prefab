@@ -14594,6 +14594,7 @@ MonoBehaviour:
   roosterShootCounterMax: 0
   roosterCanMove: 0
   shootPos: {fileID: 0}
+  roosterCutsceneOver: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 7433336954274492446}
@@ -14666,7 +14667,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6581445933626846813, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581445933626846813, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -492707183
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581445933626846813, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8136455651885849913, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -492707183
+      objectReference: {fileID: 0}
+    - target: {fileID: 8136455651885849913, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebfc43c58c8f7a548b494cfea1a475b1, type: 3}

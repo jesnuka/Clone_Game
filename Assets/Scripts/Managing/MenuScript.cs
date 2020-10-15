@@ -53,6 +53,12 @@ public class MenuScript : MonoBehaviour
         creditsElements.SetActive(false);
     }
 
+    public void ReturnToMenuScene()
+    {
+        SceneManager.LoadScene("MenuScene");
+        soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);
+
+    }
     public void Quit()
     {
         soundManager.PlaySound(SoundManager.Sound.menuSelect, 1f, false, Vector3.zero);

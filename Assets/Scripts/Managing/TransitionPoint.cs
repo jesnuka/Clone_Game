@@ -22,6 +22,7 @@ public class TransitionPoint : MonoBehaviour
     public bool flipped;
 
     public bool startsSong;
+    public bool onlyStops;
     public GameObject songToStart; 
     public GameObject songToStop;
 
@@ -160,7 +161,12 @@ public class TransitionPoint : MonoBehaviour
             if(startsSong)
             {
                 songToStop.GetComponent<AudioSource>().Stop();
-                songToStart.GetComponent<AudioSource>().Play();
+
+                if(!onlyStops)
+                {
+                    songToStart.GetComponent<AudioSource>().Play();
+                }
+                
                 
             }
 

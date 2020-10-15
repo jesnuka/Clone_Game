@@ -30,6 +30,10 @@ public class SoundManager : MonoBehaviour
         menuMove,
         walkerMove,
         chickenJump,
+        bossLights,
+        bossExplosion,
+        bossRoar,
+
 
 
 

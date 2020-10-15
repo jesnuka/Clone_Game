@@ -124,6 +124,10 @@ public class PlayerController2D : MonoBehaviour
     public float pushTimerMax;
     public bool isPushed;
 
+    public GameObject hudArea;
+    public float hudX;
+    public float hudY;
+
     public enum State
     {
         Dead,
@@ -157,25 +161,38 @@ public class PlayerController2D : MonoBehaviour
         //Size of the GUI items
         float x = Camera.main.pixelWidth / 256.0f;
         float y = Camera.main.pixelHeight / 218.0f;
-        Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width, Camera.main.rect.y * Screen.height);
+        Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width - hudX, Camera.main.rect.y * Screen.height + hudY);
 
 
         Sprite healthBar = healthBarBlock;
 
         Rect healthBarRect = new Rect(healthBar.rect.x / healthBar.texture.width, healthBar.rect.y / healthBar.texture.height,
-                                healthBar.rect.width / healthBar.texture.width, healthBar.rect.height / healthBar.texture.height);
+                                healthBar.rect.width / healthBar.texture.width, healthBar.rect.height / (healthBar.texture.height));
+      //  Rect healthBarRect = new Rect(healthBar.rect.width / healthBar.texture.width, healthBar.rect.height / healthBar.texture.height, 
+        //                        healthBar.rect.x / healthBar.texture.width, healthBar.rect.y / healthBar.texture.height);
 
         Sprite emptyBar = healthBarEmpty;
         Rect emptyBarRect = new Rect(emptyBar.rect.x / emptyBar.texture.width, emptyBar.rect.y / emptyBar.texture.height,
                                 emptyBar.rect.width / emptyBar.texture.width, emptyBar.rect.height / emptyBar.texture.height);
 
-        for (int i = 0; i < playerHealthMax; i++)
+       // Rect emptyBarRect = new Rect(emptyBar.rect.width / emptyBar.texture.width, emptyBar.rect.height / emptyBar.texture.height,
+        //                        emptyBar.rect.x / emptyBar.texture.width, emptyBar.rect.y / emptyBar.texture.height);
+
+          for (int i = 0; i < playerHealthMax; i++)
+          {
+              if (playerHealthCurrent > i)
+                  GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), healthBar.texture, healthBarRect);
+              else
+                  GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
+          }
+
+      /*  for (int i = 0; i < playerHealthMax; i++)
         {
             if (playerHealthCurrent > i)
-                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), healthBar.texture, healthBarRect);
+                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2), cmrBase.y + x * 24f, y * 2, x * 8), healthBar.texture, healthBarRect);
             else
-                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
-        }
+                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2), cmrBase.y + x * 24f, y * 2, x * 8), emptyBar.texture, emptyBarRect);
+        }*/
     }
     void Update()
     {

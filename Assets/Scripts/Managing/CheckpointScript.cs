@@ -17,6 +17,8 @@ public class CheckpointScript : MonoBehaviour
     public float activateVolume;
     public GameObject disableSong; //Turn off
 
+    public GameObject globalLight;
+
 
     private void Awake()
     {
@@ -86,6 +88,7 @@ public class CheckpointScript : MonoBehaviour
             ResetTransitions();
             ResetCamera();
             ResetSongs();
+           // globalLight
         }
     }
 

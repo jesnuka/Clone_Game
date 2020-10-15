@@ -99,12 +99,14 @@ public class CameraManager : MonoBehaviour
             background.SetActive(true);
             followAreaValue = 1;
             currentMode = Mode.Follow;
+            this.GetComponent<Camera>().orthographicSize = 9;
         }
         else if (checkId == 1)
         {
             currentMode = Mode.Stationary;
             transform.position = resetPos2;
             background2.SetActive(false);
+            this.GetComponent<Camera>().orthographicSize = 9;
 
         }
         else if (checkId == 2)
