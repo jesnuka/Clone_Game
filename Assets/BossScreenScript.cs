@@ -70,6 +70,8 @@ public class BossScreenScript : MonoBehaviour
                 gameOverStarted = true;
                 bossCutsceneManager.GetComponent<BossCutscene>().TriggerShake(6f);
                 soundManager.PlaySound(SoundManager.Sound.bossExplosion, 1f, true, this.transform.position);
+                soundManager.PlaySound(SoundManager.Sound.bossExplosion, 1f, true, this.transform.position);
+                soundManager.PlaySound(SoundManager.Sound.bossExplosion, 1f, true, this.transform.position);
                 explosionEffectParticle.GetComponent<ParticleSystem>().Play();
                 bossCutsceneManager.GetComponent<BossCutscene>().DefeatBoss();
 
