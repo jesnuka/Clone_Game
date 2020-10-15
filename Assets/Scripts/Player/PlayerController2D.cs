@@ -21,6 +21,7 @@ public class PlayerController2D : MonoBehaviour
 
     public Sprite healthBarBlock;
     public Sprite healthBarEmpty;
+    public GameObject healthHUD;
 
     public GameObject gameOverUI;
 
@@ -128,6 +129,15 @@ public class PlayerController2D : MonoBehaviour
     public float hudX;
     public float hudY;
 
+    public GameObject shootPosStand;
+    public GameObject shootPosStandL;
+    public GameObject shootPosRun;
+    public GameObject shootPosRunL;
+    public GameObject shootPosClimb;
+    public GameObject shootPosClimbL;
+    public GameObject shootPosJump;
+    public GameObject shootPosJumpL;
+
     public enum State
     {
         Dead,
@@ -162,7 +172,8 @@ public class PlayerController2D : MonoBehaviour
         float x = Camera.main.pixelWidth / 256.0f;
         float y = Camera.main.pixelHeight / 218.0f;
         Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width - hudX, Camera.main.rect.y * Screen.height + hudY);
-
+        healthHUD.transform.position = new Vector3(Camera.main.transform.position.x + cmrBase.x, Camera.main.transform.position.y + cmrBase.y, 10f);
+        
 
         Sprite healthBar = healthBarBlock;
 
@@ -460,29 +471,33 @@ public class PlayerController2D : MonoBehaviour
                     GameObject bullet = Instantiate(bulletList[weaponMode]);
                     bullet.transform.parent = this.transform;
                     bullet.GetComponent<BulletScript>().Shoot(shootDir);
-                    bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
-                    soundManager.PlaySound(SoundManager.Sound.playerShoot,0.3f, false, Vector3.zero);
-                    if(currentState == State.Climbing)
+                   // bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
+                    soundManager.PlaySound(SoundManager.Sound.playerShoot, 0.3f, false, Vector3.zero);
+                    if (currentState == State.Climbing)
                     {
                         playerAnimator.Play("Player_ClimbShoot");
                         animationDelayTime = animationDelayTimeMax;
+                        bullet.transform.position = new Vector3(transform.position.x + 1.67f * shootDir, transform.position.y + 0.92f, 0f);
                     }
-                    else if(currentState == State.Normal && (horizontalInput != 0) && isGrounded)
+                    else if (currentState == State.Normal && (horizontalInput != 0) && isGrounded)
                     {
                         playerAnimator.Play("Player_RunShoot");
                         animationDelayTime = animationDelayTimeMax;
+                        bullet.transform.position = new Vector3(transform.position.x + 1.9f * shootDir, transform.position.y + 0.1f, 0f);
                     }
-                    else if(currentState == State.Falling || (currentState == State.Normal && !isGrounded))
+                    else if (currentState == State.Falling || (currentState == State.Normal && !isGrounded))
                     {
                         playerAnimator.Play("Player_FallShoot");
                         animationDelayTime = animationDelayTimeMax;
+                        bullet.transform.position = new Vector3(transform.position.x + 1.75f * shootDir, transform.position.y + 1.25f, 0f);
                     }
                     else
                     {
                         playerAnimator.Play("Player_Shoot");
                         animationDelayTime = animationDelayTimeMax;
+                        bullet.transform.position = new Vector3(transform.position.x + 2f * shootDir, transform.position.y + 0.25f, 0f);
                     }
-                    
+
                     if (shootDir == 1)
                         CreateParticles(2);
                     else

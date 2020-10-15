@@ -267,8 +267,8 @@ MonoBehaviour:
   pushTimerMax: 0.5
   isPushed: 0
   hudArea: {fileID: 0}
-  hudX: 55.5
-  hudY: 121.5
+  hudX: 0
+  hudY: 0
 --- !u!50 &8377331186771214318
 Rigidbody2D:
   serializedVersion: 4
@@ -10098,6 +10098,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8377331186771214319}
     m_Modifications:
+    - target: {fileID: 1969051397968003769, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1969051397968003769, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
+      propertyPath: m_Intensity
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1969051397968003769, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[1]
+      value: -1093801085
+      objectReference: {fileID: 0}
+    - target: {fileID: 1969051397968003769, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
+      propertyPath: m_ApplyToSortingLayers.Array.data[2]
+      value: -492707183
+      objectReference: {fileID: 0}
     - target: {fileID: 5419560338912034468, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10140,6 +10156,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5419560338912034468, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057629426180864501, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7189755449035394795, guid: 17dd53fc074eefa4e9c78e7b84ca8556, type: 3}
