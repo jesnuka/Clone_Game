@@ -14541,8 +14541,8 @@ MonoBehaviour:
   moveParticles: {fileID: 795930953821866194}
   maxHealth: 1
   currentHealth: 0
-  maxSpeed: 0.025
-  currentSpeed: 0.025
+  maxSpeed: 0.03
+  currentSpeed: 0.03
   damage: 3
   currentState: 1
   enemyType: 1
@@ -14580,6 +14580,7 @@ MonoBehaviour:
   gorillaSpawnJumpTimer: 0
   gorillaSpawnJumpTimerMax: 0
   hasPlatform: 0
+  isOutside: 0
   chickenSpriteObject: {fileID: 0}
   chickenSpriteObject2: {fileID: 0}
   targetPlatform: {fileID: 0}
@@ -14593,6 +14594,9 @@ MonoBehaviour:
   roosterShootCounterMax: 0
   roosterCanMove: 0
   shootPos: {fileID: 0}
+  roosterCutsceneOver: 0
+  bossCutsceneManager: {fileID: 0}
+  bossHurtParticles2: {fileID: 0}
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 1906623093085209974}
