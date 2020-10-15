@@ -7201,7 +7201,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Only a handful of survivors remain, \nnow it's up to you to defeat the
-    vile AI..."
+    vile A.I."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2ab4a2759a51bc24baefa13e248b25a4, type: 2}
   m_sharedMaterial: {fileID: 6721441891291225036, guid: 2ab4a2759a51bc24baefa13e248b25a4, type: 2}
