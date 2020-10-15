@@ -52,7 +52,7 @@ public class SongController : MonoBehaviour
             currentVolume2 -= Time.deltaTime/volume2Divider;
             songToStop.GetComponent<AudioSource>().volume = currentVolume2;
         }
-        if(currentVolume2 < 0 && currentVolume1 >= maxVolume1)
+        if(currentVolume1 >= maxVolume1)
         {
             stopped = true;
             currentVolume2 = 0f;

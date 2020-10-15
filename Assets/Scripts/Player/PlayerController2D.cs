@@ -358,7 +358,7 @@ public class PlayerController2D : MonoBehaviour
         {
             playerLivesCurrent += amount;
             CreateParticles(4);
-            soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f, false, Vector3.zero);
+            soundManager.PlaySound(SoundManager.Sound.playerPickup, 0.5f, false, Vector3.zero);
         }
     }
 
@@ -427,14 +427,14 @@ public class PlayerController2D : MonoBehaviour
                 {
                     //Max out HP
                     CreateParticles(4);
-                    soundManager.PlaySound(SoundManager.Sound.playerPickup, 1f, false, Vector3.zero);
+                    soundManager.PlaySound(SoundManager.Sound.playerPickup, 0.5f, false, Vector3.zero);
                     playerHealthCurrent = playerHealthMax;
                 }
                 else
                 {
                     //Heal
                     CreateParticles(4);
-                    soundManager.PlaySound(SoundManager.Sound.playerPickup,1f,false, Vector3.zero);
+                    soundManager.PlaySound(SoundManager.Sound.playerPickup, 0.5f, false, Vector3.zero);
                     playerHealthCurrent = tempValue;
                 }
             }
