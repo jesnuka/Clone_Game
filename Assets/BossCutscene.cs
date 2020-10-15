@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class BossCutscene : MonoBehaviour
 {
 
-
+    public SoundManager soundManager;
     public float lightCounter;
     public float lightCounter2;
     public float lightCounter3;
@@ -157,6 +157,7 @@ public class BossCutscene : MonoBehaviour
             if(lightCounter < 0 && !light1On && !light2On && !light3On)
             {
                 Debug.Log("zip");
+                soundManager.PlaySound(SoundManager.Sound.bossLights, 0.5f, false, Vector3.zero);
                 lightCounter = lightCounterMax;
                 lightObj1.SetActive(true);
                 light1On = true;
@@ -165,6 +166,7 @@ public class BossCutscene : MonoBehaviour
             if (lightCounter < 0 && light1On && !light2On && !light3On)
             {
                 Debug.Log("zoop");
+                soundManager.PlaySound(SoundManager.Sound.bossLights, 0.5f, false, Vector3.zero);
                 lightCounter = lightCounterMax;
                 lightObj2.SetActive(true);
                 light2On = true;
@@ -174,6 +176,7 @@ public class BossCutscene : MonoBehaviour
             {
                 light3On = true;
                 Debug.Log("zappe");
+                soundManager.PlaySound(SoundManager.Sound.bossLights, 0.5f, false, Vector3.zero);
                 lightCounter = lightCounterMax;
                 lightObj3.SetActive(true);
                 allLightsOn = true;
