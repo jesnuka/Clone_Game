@@ -143,11 +143,7 @@ public class EnemyController : MonoBehaviour
     public GameObject bossCutsceneManager;
     public ParticleSystem bossHurtParticles2;
 
-    public Sprite bossHealthBarBlock;
-    public Sprite bossHealthBarEmpty;
-
-    public float bossHudY;
-    public float bossHudX;
+    
 
     // -- ROOSTER BOSS related ends
 

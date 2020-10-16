@@ -129,6 +129,9 @@ public class PlayerController2D : MonoBehaviour
     public float hudX;
     public float hudY;
 
+    public float hudBarX;
+    public float hudBarY;
+
     public GameObject shootPosStand;
     public GameObject shootPosStandL;
     public GameObject shootPosRun;
@@ -171,8 +174,8 @@ public class PlayerController2D : MonoBehaviour
         //Size of the GUI items
         float x = Camera.main.pixelWidth / 256.0f;
         float y = Camera.main.pixelHeight / 218.0f;
-        Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width - hudX, Camera.main.rect.y * Screen.height + hudY);
-        healthHUD.transform.position = new Vector3(Camera.main.transform.position.x + cmrBase.x, Camera.main.transform.position.y + cmrBase.y, 10f);
+        Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width + hudBarX, Camera.main.rect.y * Screen.height + hudBarY);
+        healthHUD.transform.position = new Vector3(Camera.main.transform.position.x + hudX, Camera.main.transform.position.y + hudY, 10f);
         
 
         Sprite healthBar = healthBarBlock;
@@ -189,21 +192,21 @@ public class PlayerController2D : MonoBehaviour
        // Rect emptyBarRect = new Rect(emptyBar.rect.width / emptyBar.texture.width, emptyBar.rect.height / emptyBar.texture.height,
         //                        emptyBar.rect.x / emptyBar.texture.width, emptyBar.rect.y / emptyBar.texture.height);
 
-          for (int i = 0; i < playerHealthMax; i++)
+        /*  for (int i = 0; i < playerHealthMax; i++)
           {
               if (playerHealthCurrent > i)
                   GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), healthBar.texture, healthBarRect);
               else
                   GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
-          }
+          }*/
 
-      /*  for (int i = 0; i < playerHealthMax; i++)
+        for (int i = 0; i < playerHealthMax; i++)
         {
             if (playerHealthCurrent > i)
-                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2), cmrBase.y + x * 24f, y * 2, x * 8), healthBar.texture, healthBarRect);
-            else
-                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2), cmrBase.y + x * 24f, y * 2, x * 8), emptyBar.texture, emptyBarRect);
-        }*/
+                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * ( i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), healthBar.texture, healthBarRect);
+           // else
+              //  GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * ( i * 2.05f), cmrBase.y + x * 24f, y * 2, x * 5), emptyBar.texture, emptyBarRect);
+        }
     }
     void Update()
     {

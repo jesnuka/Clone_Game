@@ -78,6 +78,7 @@ public class CameraManager : MonoBehaviour
     {
         if(backgroundToggleOn)
         {
+            Debug.Log("tee");
             backgroundTimer -= Time.deltaTime;
             ToggleBackground();
         }
@@ -124,6 +125,7 @@ public class CameraManager : MonoBehaviour
         {
             if (background.activeSelf || background2.activeSelf)
             {
+                Debug.Log("Ok");
                 background.SetActive(false);
                 background2.SetActive(false);
                 backgroundToggleOn = false;
@@ -131,6 +133,7 @@ public class CameraManager : MonoBehaviour
             
             else
             {
+                Debug.Log("Ok2");
                 background2.SetActive(true);
                 backgroundToggleOn = false;
             }
@@ -211,7 +214,7 @@ public class CameraManager : MonoBehaviour
         }
         if (toggleBackground)
         {
-
+            Debug.Log("true up");
             backgroundToggleOn = true;
             backgroundTimer = backgroundTimerMax;
         }
@@ -229,6 +232,7 @@ public class CameraManager : MonoBehaviour
         }
         if (toggleBackground)
         {
+            Debug.Log("true down");
             backgroundToggleOn = true;
             backgroundTimer = backgroundTimerMax;
         }

@@ -14541,8 +14541,8 @@ MonoBehaviour:
   moveParticles: {fileID: 795930953821866194}
   maxHealth: 1
   currentHealth: 0
-  maxSpeed: 0.03
-  currentSpeed: 0.03
+  maxSpeed: 0.025
+  currentSpeed: 0.025
   damage: 3
   currentState: 1
   enemyType: 1
@@ -14597,10 +14597,6 @@ MonoBehaviour:
   roosterCutsceneOver: 0
   bossCutsceneManager: {fileID: 0}
   bossHurtParticles2: {fileID: 0}
-  bossHealthBarBlock: {fileID: 21300000, guid: 4301fa939e142a1478c2e673712d7d2d, type: 3}
-  bossHealthBarEmpty: {fileID: 21300000, guid: 4f11eb3443e3f394ab67d0d836e90cad, type: 3}
-  bossHudY: 0
-  bossHudX: 0
   groundCheckDistance: 0.5
   wallCheckDistance: 0.1
   groundCheck: {fileID: 1906623093085209974}

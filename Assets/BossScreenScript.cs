@@ -33,7 +33,12 @@ public class BossScreenScript : MonoBehaviour
     public float bossHudY;
     public float bossHudX;
 
+    public float bossBarHudX;
+    public float bossBarHudY;
+
     public bool gameOverStarted;
+    public GameObject bossHUDObject;
+
     private void OnGUI()
     {
         if (isActive)
@@ -57,15 +62,23 @@ public class BossScreenScript : MonoBehaviour
 
             // Rect emptyBarRect = new Rect(emptyBar.rect.width / emptyBar.texture.width, emptyBar.rect.height / emptyBar.texture.height,
             //                        emptyBar.rect.x / emptyBar.texture.width, emptyBar.rect.y / emptyBar.texture.height);
-            Debug.Log("maxhealth is " + healthMax / 10);
-            Debug.Log("currhealth is " + healthCurrent / 10);
-            for (int i = 0; i < healthMax / 5; i++)
+          /*  for (int i = 0; i < healthMax / 5; i++)
             {
                 if (healthCurrent / 5 > i)
                     GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), healthBar.texture, healthBarRect);
                 else
                     GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
+            }*/
+
+            for (int i = 0; i < healthMax / 4f; i++)
+            {
+                if (healthCurrent > i)
+                    GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), healthBar.texture, healthBarRect);
+              //  else
+                 //   GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), emptyBar.texture, emptyBarRect);
             }
+
+    
         }
 
 
@@ -78,6 +91,7 @@ public class BossScreenScript : MonoBehaviour
     {
         if(isActive)
         {
+            
             if (other.attachedRigidbody != null && other.attachedRigidbody.GetComponent<BulletScript>())
             {
                 BulletScript bullet = other.attachedRigidbody.GetComponent<BulletScript>();
@@ -93,6 +107,14 @@ public class BossScreenScript : MonoBehaviour
 
     private void Update()
     {
+        if(isActive)
+        {
+            bossHUDObject.SetActive(true);
+        }
+        else
+        {
+            bossHUDObject.SetActive(false);
+        }
         if(healthCurrent < 25 && healthCurrent > 10)
         {
             //half hp, display effect
