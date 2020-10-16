@@ -70,7 +70,7 @@ public class BossScreenScript : MonoBehaviour
                     GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
             }*/
 
-            for (int i = 0; i < healthMax / 4f; i++)
+            for (int i = 0; i < healthMax; i++)
             {
                 if (healthCurrent > i)
                     GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), healthBar.texture, healthBarRect);

@@ -281,9 +281,9 @@ public class PlayerController2D : MonoBehaviour
 
     void GameOver()
     { 
-        gameOverUI.SetActive(true);
+       // gameOverUI.SetActive(true);
         gameIsOver = true;
-        SceneManager.LoadScene("GameScene_Menu");
+        SceneManager.LoadScene("GameOverScene");
     }
 
     void CheckInput()
@@ -346,12 +346,20 @@ public class PlayerController2D : MonoBehaviour
         gameOverTimer -= Time.deltaTime;
         if(gameOverTimer < 0 )
         {
-            Debug.Log("Respawning player!");
-            currentCheckpoint.GetComponent<CheckpointScript>().ResetThings();
-            blackoutUI.SetActive(false);
-            playerHealthCurrent = playerHealthMax;
-            transform.position = currentCheckpoint.transform.position;
-            currentState = State.Normal;
+            if(playerLivesCurrent >= 0)
+            {
+                Debug.Log("Respawning player!");
+                currentCheckpoint.GetComponent<CheckpointScript>().ResetThings();
+                blackoutUI.SetActive(false);
+                playerHealthCurrent = playerHealthMax;
+                transform.position = currentCheckpoint.transform.position;
+                currentState = State.Normal;
+            }
+            else
+            {
+                 GameOver();
+            }
+            
         }
         else
         {
@@ -398,7 +406,10 @@ public class PlayerController2D : MonoBehaviour
                     }
                     else
                     {
-                        currentState = State.Dead;
+                        playerLivesCurrent -= 1;
+                        gameOverTimer = gameOverTimerMax;
+                        currentState = State.Respawning;
+                     //   currentState = State.Dead;
                     }
                    // 
                 }
