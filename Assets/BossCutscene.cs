@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class BossCutscene : MonoBehaviour
 {
-
+    public PlayerController2D player;
     public SoundManager soundManager;
     public float lightCounter;
     public float lightCounter2;
@@ -100,6 +100,7 @@ public class BossCutscene : MonoBehaviour
     }
     public void ResetStats()
     {
+        player.inBossFight = false;
         bossController.roosterCutsceneOver = false;
         allLightsOn = false;
         lightObj1.SetActive(false);
@@ -125,6 +126,8 @@ public class BossCutscene : MonoBehaviour
         {
             if(!cutsceneStarted)
             {
+                PlayerController2D player = other.attachedRigidbody.GetComponent<PlayerController2D>();
+                player.inBossFight = true;
                 globalLight.GetComponent<Light2D>().intensity = 0;
                 cutsceneStarted = true;
                 cutscenePlaying = true;
@@ -156,7 +159,7 @@ public class BossCutscene : MonoBehaviour
             lightCounter -= Time.deltaTime;
             if(lightCounter < 0 && !light1On && !light2On && !light3On)
             {
-                Debug.Log("zip");
+               // Debug.Log("zip");
                 soundManager.PlaySound(SoundManager.Sound.bossLights, 0.5f, false, Vector3.zero);
                 lightCounter = lightCounterMax;
                 lightObj1.SetActive(true);
@@ -165,7 +168,7 @@ public class BossCutscene : MonoBehaviour
 
             if (lightCounter < 0 && light1On && !light2On && !light3On)
             {
-                Debug.Log("zoop");
+               // Debug.Log("zoop");
                 soundManager.PlaySound(SoundManager.Sound.bossLights, 0.5f, false, Vector3.zero);
                 lightCounter = lightCounterMax;
                 lightObj2.SetActive(true);
@@ -175,7 +178,7 @@ public class BossCutscene : MonoBehaviour
             if (lightCounter < 0 && light1On && light2On && !light3On)
             {
                 light3On = true;
-                Debug.Log("zappe");
+              //  Debug.Log("zappe");
                 soundManager.PlaySound(SoundManager.Sound.bossLights, 0.5f, false, Vector3.zero);
                 lightCounter = lightCounterMax;
                 lightObj3.SetActive(true);

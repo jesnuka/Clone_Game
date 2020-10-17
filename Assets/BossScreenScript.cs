@@ -36,6 +36,9 @@ public class BossScreenScript : MonoBehaviour
     public float bossBarHudX;
     public float bossBarHudY;
 
+    public float hudBarXAlt;
+    public float hudBarYAlt;
+
     public bool gameOverStarted;
     public GameObject bossHUDObject;
 
@@ -46,8 +49,8 @@ public class BossScreenScript : MonoBehaviour
             //Size of the GUI items
             float x = Camera.main.pixelWidth / 256.0f;
             float y = Camera.main.pixelHeight / 218.0f;
-            Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width - bossHudX, Camera.main.rect.y * Screen.height + bossHudY);
-
+            Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width - bossBarHudX, Camera.main.rect.y * Screen.height + bossBarHudY);
+            bossHUDObject.transform.position = new Vector3(Camera.main.transform.position.x + bossHudX, Camera.main.transform.position.y + bossHudY, 10f);
 
             Sprite healthBar = bossHealthBarBlock;
 
@@ -73,9 +76,9 @@ public class BossScreenScript : MonoBehaviour
             for (int i = 0; i < healthMax; i++)
             {
                 if (healthCurrent > i)
-                    GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), healthBar.texture, healthBarRect);
-              //  else
-                 //   GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), emptyBar.texture, emptyBarRect);
+                    GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 1.25f), cmrBase.y + x * 24f, y * 2, x * 3), healthBar.texture, healthBarRect);
+                else
+                    GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + y * (72 - i * 1.25f), cmrBase.y + x * 24f, y * 2, x * 3), emptyBar.texture, emptyBarRect);
             }
 
     

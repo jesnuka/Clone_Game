@@ -132,6 +132,16 @@ public class PlayerController2D : MonoBehaviour
     public float hudBarX;
     public float hudBarY;
 
+    public float hudBarXAlt;
+    public float hudBarYAlt;
+
+    public float hudXAlt;
+    public float hudYAlt;
+
+    public float barWidthAlt;
+    public float barHeightAlt;
+    public bool inBossFight;
+
     public GameObject shootPosStand;
     public GameObject shootPosStandL;
     public GameObject shootPosRun;
@@ -174,8 +184,22 @@ public class PlayerController2D : MonoBehaviour
         //Size of the GUI items
         float x = Camera.main.pixelWidth / 256.0f;
         float y = Camera.main.pixelHeight / 218.0f;
-        Vector2 cmrBase = new Vector2(Camera.main.rect.x * Screen.width + hudBarX, Camera.main.rect.y * Screen.height + hudBarY);
-        healthHUD.transform.position = new Vector3(Camera.main.transform.position.x + hudX, Camera.main.transform.position.y + hudY, 10f);
+        Vector2 cmrBase;
+        if (inBossFight)
+        {
+           // Debug.Log("hudbarALt are "+hudBarXAlt + " "+hudBarYAlt);
+           // Debug.Log("hudalt are "+hudXAlt + " "+hudYAlt);
+            cmrBase = new Vector2(Camera.main.rect.x * Screen.width + hudBarXAlt, Camera.main.rect.y * Screen.height + hudBarYAlt);
+            healthHUD.transform.position = new Vector3(Camera.main.transform.position.x + hudXAlt, Camera.main.transform.position.y + hudYAlt, 10f);
+           
+        }
+        else
+        {
+          //  Debug.Log("else");
+            cmrBase = new Vector2(Camera.main.rect.x * Screen.width + hudBarX, Camera.main.rect.y * Screen.height + hudBarY);
+            healthHUD.transform.position = new Vector3(Camera.main.transform.position.x + hudX, Camera.main.transform.position.y + hudY, 10f);
+        }
+        
         
 
         Sprite healthBar = healthBarBlock;
@@ -199,14 +223,29 @@ public class PlayerController2D : MonoBehaviour
               else
                   GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + x * 24f, cmrBase.y + y * (72 - i * 2), x * 8, y * 2), emptyBar.texture, emptyBarRect);
           }*/
-
-        for (int i = 0; i < playerHealthMax; i++)
+        if(inBossFight)
         {
-            if (playerHealthCurrent > i)
-                GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * ( i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), healthBar.texture, healthBarRect);
-           // else
-              //  GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * ( i * 2.05f), cmrBase.y + x * 24f, y * 2, x * 5), emptyBar.texture, emptyBarRect);
+            Debug.Log("Hi");
+            for (int i = 0; i < playerHealthMax; i++)
+            {
+                if (playerHealthCurrent > i)
+                    GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * (i * 1.25f), cmrBase.y + x * 24f, y * 2, x * 3), healthBar.texture, healthBarRect);
+                // else
+                //  GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * ( i * 2.05f), cmrBase.y + x * 24f, y * 2, x * 5), emptyBar.texture, emptyBarRect);
+            }
+
         }
+        else
+        {
+            for (int i = 0; i < playerHealthMax; i++)
+            {
+                if (playerHealthCurrent > i)
+                    GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * (i * 2f), cmrBase.y + x * 24f, y * 2, x * 5), healthBar.texture, healthBarRect);
+                // else
+                //  GUI.DrawTextureWithTexCoords(new Rect(cmrBase.x + 72 + y * ( i * 2.05f), cmrBase.y + x * 24f, y * 2, x * 5), emptyBar.texture, emptyBarRect);
+            }
+        }
+        
     }
     void Update()
     {
